@@ -153,7 +153,7 @@ void ofxKuSaveObjFile(ofMesh &mesh, string fileName, bool setupNormals,
 	vector<string> list(2 + N);	//header, v, vt, vn, f
 	int j = 0;
 
-	if (textured) {
+	if (textured && !mtl_file.empty()) {
 		list[j++] = "mtllib " + mtl_file; // +".mtl";
 		list[j++] = "usemtl texture";
 	}
