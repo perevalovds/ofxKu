@@ -1,5 +1,5 @@
 # ofxKu
-Kuflex extension for openFrameworks.
+My extension for openFrameworks.
 
 It contains classes and functions for rendering, image analysis and working with files, which we are using in Kuflex projects.
 * Modules are relatively independent. 
