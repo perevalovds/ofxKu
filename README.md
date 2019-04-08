@@ -15,16 +15,16 @@ It contains classes and functions for rendering, image analysis and working with
 
 ## Geometry and meshes
 1. ofxKuGeom - geometrical utils
-  * signed triangle area
-  * compute if point is inside polygon
-  * convert points from unit square to unit sphere and back
-  * create circle on a unit sphere
+   * signed triangle area
+   * compute if point is inside polygon
+   * convert points from unit square to unit sphere and back
+   * create circle on a unit sphere
 
 2. ofxKuGeomMeshUtils - utilities for mesh
-  * loading OBJ files
-  * computing normals
-  * make wireframed mesh from triangle mesh
-  * shuffle verties and triangles
+   * loading OBJ files
+   * computing normals
+   * make wireframed mesh from triangle mesh
+   * shuffle verties and triangles
 
 
 ## Image processing
