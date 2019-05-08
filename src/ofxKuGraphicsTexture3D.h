@@ -14,6 +14,11 @@ struct ofxKuGraphicsTexture3D {
 	ofxKuGraphicsTexture3D();
     ~ofxKuGraphicsTexture3D();
 
+	//Set verbatim mode - enable if something not works you need to see GL messages
+	void set_print_gl_errors(bool v) { print_errors_ = v; }
+
+	static void set_print_gl_errors_all();	//Print all gl errors using callback
+
 	//Set wrap mode - must be called before loading data into texture
 	static const int WRAP_CLAMP = 0;		//default value
 	static const int WRAP_REPEAT = 1;
@@ -64,13 +69,6 @@ struct ofxKuGraphicsTexture3D {
 	int d() { return d_; }
 
 	//Static GL-related functions -----------------------------------------------
-	//GL errors
-	static bool gl_error_check(const string &pass);	//print OpenGL errors after operations
-	
-	static void gl_errors_print_all();	//Print all gl errors using callback
-
-	static void warning(const string &message);
-
 	//GL values
 	static GLint gl_wrap(int mode);	//mode - WRAP_CLAMP,...
 	static GLint gl_interpolate(int mode); //mode - INTERPOLATE_MODE_LINEAR,...
@@ -94,7 +92,11 @@ protected:
 	int w_ = 0;
 	int h_ = 0;
 	int d_ = 0;
-	
+
+	bool print_errors_ = false;
+	bool gl_error_check(const string &pass);	//print OpenGL errors after operations
+	static void warning(const string &message);
+
 
 	//wrap and interpolation modes
 	int wrap_mode_ = WRAP_CLAMP;	

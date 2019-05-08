@@ -19,12 +19,15 @@ ofxKuGraphicsTexture3D::~ofxKuGraphicsTexture3D() {
 
 //--------------------------------------------------------------
 bool ofxKuGraphicsTexture3D::gl_error_check(const string &pass) {
-	GLenum res = glGetError();
-	if (res != GL_NO_ERROR) {
-		cout << "ofxKuGraphicsTexture3D, OpenGL error at " << pass << ": " << res << endl;
-		return false;
+	if (print_errors_) {
+		GLenum res = glGetError();
+		if (res != GL_NO_ERROR) {
+			cout << "ofxKuGraphicsTexture3D, OpenGL error at " << pass << ": " << res << endl;
+			return false;
+		}
+		return true;
 	}
-	return true;
+	else return true;
 }
 
 //--------------------------------------------------------------
@@ -50,12 +53,10 @@ Texture3D_OpenGL_MessageCallback(GLenum source,
 }
 
 //--------------------------------------------------------------
-void ofxKuGraphicsTexture3D::gl_errors_print_all() {
+void ofxKuGraphicsTexture3D::set_print_gl_errors_all() {
 	cout << "Activating callback for OpenGL errors print" << endl;
 	glEnable(GL_DEBUG_OUTPUT);
-	gl_error_check("GL_DEBUG_OUTPUT");
 	glDebugMessageCallback(Texture3D_OpenGL_MessageCallback, 0);
-	gl_error_check("glDebugMessageCallback");
 }
 
 
