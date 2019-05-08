@@ -325,7 +325,7 @@ void ofxKuGraphicsTexture3D::setUniformTexture(ofShader &shader, string name, in
 	glBindTexture(GL_TEXTURE_3D, textureID);
 	gl_error_check("setUniformTexture, GL_TEXTURE_3D");
 
-	shader.setUniform1i("densityVol", textureLocation);
+	shader.setUniform1i(name, textureLocation);
 	gl_error_check("setUniformTexture, setUniform1i");
 
 	gl_error_check("setUniformTexture, glActiveTexture GL_TEXTURE0");
