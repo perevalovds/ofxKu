@@ -26,6 +26,9 @@ It contains classes and functions for rendering, image analysis and working with
    * make wireframed mesh from triangle mesh
    * shuffle verties and triangles
 
+## Graphics
+* ofxKuGraphicsTexture3D - class implementing 3D GPU texture for programmable rendering pipeline
+   
 
 ## Image processing
 * ofxKuRaster.h - include it for accessing all image processing functions
