@@ -68,6 +68,8 @@ struct ofxKuGraphicsTexture3D {
 	int h() { return h_; }
 	int d() { return d_; }
 
+	unsigned long int size_in_bytes();
+
 	//Static GL-related functions -----------------------------------------------
 	//GL values
 	static GLint gl_wrap(int mode);	//mode - WRAP_CLAMP,...
@@ -92,6 +94,8 @@ protected:
 	int w_ = 0;
 	int h_ = 0;
 	int d_ = 0;
+	int type_ = 0;
+	int channels_ = 0;
 
 	bool print_errors_ = false;
 	bool gl_error_check(const string &pass);	//print OpenGL errors after operations

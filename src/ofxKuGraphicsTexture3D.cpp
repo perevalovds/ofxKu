@@ -171,6 +171,8 @@ bool ofxKuGraphicsTexture3D::load_data(int type, void* data, int w, int h, int d
 	w_ = w;
 	h_ = h;
 	d_ = d;
+	type_ = type;
+	channels_ = channels;
 
 	glTexImage3D(GL_TEXTURE_3D, 0, gl_channels(channels), w_, h_, d_, 0, gl_channels(channels), gl_type(type), data);
 	TEXTURE3D_ERR("glTexImage3D");
@@ -227,7 +229,7 @@ bool ofxKuGraphicsTexture3D::load_file(string file_name) {
 		fread(&d, sizeof(d), 1, f);
 		fread(&type, sizeof(type), 1, f);
 		fread(&channels, sizeof(channels), 1, f);
-		int max_size = 16768;
+		int max_size = 16767;
 		if (!(w >= 0 && w < max_size && h >= 0 && h < max_size && d >= 0 && d < max_size)) {
 			warning("Loading file " + file_name + ": bad dimensions "
 				+ ofToString(w) + " " + ofToString(h) + ofToString(d));
@@ -272,6 +274,13 @@ bool ofxKuGraphicsTexture3D::load_file(string file_name) {
 	}
 
 }
+
+//--------------------------------------------------------------
+unsigned long int ofxKuGraphicsTexture3D::size_in_bytes() {
+	return unsigned int(w_) * unsigned int(h_) * unsigned int(d_)
+		* unsigned int(gl_type_size_in_bytes(type_)) * unsigned int(channels_);
+}
+
 
 //--------------------------------------------------------------
 //Create file - static functions
