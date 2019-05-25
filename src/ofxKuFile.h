@@ -11,6 +11,9 @@ int ofxKuFileSize( string fileName );
 vector<string> ofxKuFileReadStrings( string fileName );
 bool ofxKuFileWriteStrings( const vector<string> &list, string fileName );
 
+
+
+
 //string ofxKuFileGetExtension( string fileName, bool lowerCase = true );
 //vector<string> readStringsFilterAndNotEmpty( const string &fileName );
 //vector<float> readFloats( const string &fileName );

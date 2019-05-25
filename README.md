@@ -6,6 +6,15 @@ It contains classes and functions for rendering, image analysis and working with
 * Module ofxKuRasterOpenCV requires ofxOpenCv addon to work - if you don't need it, kust not include in your project.
 * ofxKuFileTime::isNewerThan function implementation doesn't works in oF >= 0.9.0, te simplest workaround is change it to return always 'true'.
 
+## Compression
+  ofxKuCompress - RLE and bit compression
+
+## Converting
+  ofxKuConvertTypes
+   * convert matrix to string and back
+   * convert vector<string> to vector<int>, vector<float> and back
+
+
 ## Drawing
 * ofxKuRectRender class for fast rendering rectangles
 * ofxKuLineRender class for fast rendering lines
@@ -19,6 +28,7 @@ It contains classes and functions for rendering, image analysis and working with
    * compute if point is inside polygon
    * convert points from unit square to unit sphere and back
    * create circle on a unit sphere
+   
 
 2. ofxKuGeomMeshUtils - utilities for mesh
    * loading OBJ files
@@ -39,7 +49,7 @@ count number of pixels in range, project on axes, histogram for raster arrays
 * ofxKuRasterMorphology - dilatation and erosion, contour detection
 * ofxKuRasterResize_nearest - resize raster arrays
 * ofxKuFloodFill function which do flood fill in array, removing small blobs
-* ofxKuRasterOpenCV - gaussian smoothing, convex hull, implemented with OpenCV. Requires ofxOpenCv addon.
+* ofxKuRasterOpenCV - gaussian smoothing, convex hull, implemented using OpenCV. Requires ofxOpenCv addon.
 
 ## Statistics
 * ofxKuMathStat - compute median value of the vector
@@ -49,10 +59,12 @@ count number of pixels in range, project on axes, histogram for raster arrays
 * ofxKuSlowBit - bit, controllable changing it state
 
 ## Presets
-* ofxKuPreset - presets maintaining system
+* ofxKuPreset - presets maintaining system, including smooth transition,
+also can be linked with ofxKuTextGui GUI system.
 
-## Utilities for files
-* ofxKuBufferRecorder class for recording/replaying data buffers, such as kinect data
+## File utilities
+* ofxKuRecorderBinary class for recording/replaying data buffers, such as depth camera point clouds
+* ofxKuRecorderStrings class for storing string data in frames in a text file
 * ofxKuFile - write and read text files as vector of strings
 * ofxKuFileTime::isNewerThan(string fileName1, string fileName2) function which compares file creation times
 

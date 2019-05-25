@@ -89,5 +89,3 @@ vector<ofPoint> ofxKuGeomCreateCircleOnSphere(ofPoint c3, float rad, int resolut
 
 
 //--------------------------------------------------------
-
-

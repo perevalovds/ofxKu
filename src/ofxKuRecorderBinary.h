@@ -1,7 +1,7 @@
 #pragma once
 
 //Buffer recorder/player, writes each data frame in separate file
-//can be used for storing depth cameras clouds
+//can be used for saving, for example, depth camera point clouds
 
 #include "ofMain.h"
 

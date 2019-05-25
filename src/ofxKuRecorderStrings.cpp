@@ -1,11 +1,6 @@
 #include "ofxKuRecorderStrings.h"
 #include "ofxKuFile.h"
 
-//--------------------------------------------------------------
-void ofxKuRecorderStrings::setup(string folder) {
-	folder_ = folder;
-	cout << "Recorder initialized in folder " << folder_ << endl;
-}
 
 //--------------------------------------------------------------
 void ofxKuRecorderStrings::record_toggle() {
@@ -21,11 +16,11 @@ void ofxKuRecorderStrings::record_toggle() {
 		frame_data_ = "";
 	}
 	else {
-		string file_name1 = folder_ + "record.txt";
-		string file_name2 = folder_ + "record_" + ofGetTimestampString() + ".txt";
-		ofxKuFileWriteStrings(file, file_name1);
-		ofxKuFileWriteStrings(file, file_name2);
-		cout << "Saved " << file_name2 << endl;
+		//string file_name1 = folder_ + "record.txt";
+		//string file_name2 = folder_ + "record_" + ofGetTimestampString() + ".txt";
+		//ofxKuFileWriteStrings(file, file_name1);
+		//ofxKuFileWriteStrings(file, file_name2);
+		//cout << "Saved " << file_name2 << endl;
 	}
 }
 
@@ -39,8 +34,6 @@ void ofxKuRecorderStrings::play_toggle() {
 	playing_ = !playing_;
 	cout << "playing " << playing_ << endl;
 	if (playing_) {
-		string file_name1 = folder_ + "record.txt";
-		file = ofxKuFileReadStrings(file_name1);
 		frame_ = 0;
 		frame_data_ = "";
 	}
@@ -51,13 +44,14 @@ void ofxKuRecorderStrings::play_toggle() {
 
 //--------------------------------------------------------------
 void ofxKuRecorderStrings::add_data_to_current_frame(string key, string value) {
-	if (!frame_data_.empty()) frame_data_ += delimiter;
-	frame_data_ += key + delimiter + value;
+	if (!frame_data_.empty()) frame_data_ += separator;
+	frame_data_ += key + separator + value;
+	//cout << "frame " << frame_data_ << endl;
 }
 
 //--------------------------------------------------------------
 string ofxKuRecorderStrings::get_data_from_current_frame(string key) {
-	vector<string> item = ofSplitString(frame_data_, delimiter);  //TODO can work slow for big data and big number of keys
+	vector<string> item = ofSplitString(frame_data_, separator);  //TODO can work slow for big data and big number of keys
 	for (int i = 0; i < item.size(); i+=2) {
 		if (item[i] == key && (i + 1 < item.size())) {
 			return item[i+1];
@@ -81,13 +75,15 @@ void ofxKuRecorderStrings::next_frame() {
 }
 
 //--------------------------------------------------------------
-void ofxKuRecorderStrings::save() {
-
+bool ofxKuRecorderStrings::save(string file_name) {
+	return ofxKuFileWriteStrings(file, file_name);
 }
 
 //--------------------------------------------------------------
-void ofxKuRecorderStrings::load() {
-
+bool ofxKuRecorderStrings::load(string file_name) {
+	if (!ofxKuFileExists(file_name)) return false;
+	file = ofxKuFileReadStrings(file_name);
+	return true;
 }
 
 //--------------------------------------------------------------
