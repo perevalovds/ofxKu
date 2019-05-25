@@ -1,30 +1,30 @@
-#include "ofxKuBufferRecorder.h"
+#include "ofxKuRecorderBinary.h"
 
 //--------------------------------------------------------------
-ofxKuBufferRecorder::ofxKuBufferRecorder() {
+ofxKuRecorderBinary::ofxKuRecorderBinary() {
 	frame_ = 0;
 	recording_ = false;
 }
 
 //--------------------------------------------------------------
-void ofxKuBufferRecorder::start_rec(string folder) {	//folder must exists
+void ofxKuRecorderBinary::start_rec(string folder) {	//folder must exists
 	folder_ = folder;
 	recording_ = true;
 	frame_ = 0;
 }
 
 //--------------------------------------------------------------
-void ofxKuBufferRecorder::stop_rec() {
+void ofxKuRecorderBinary::stop_rec() {
 	recording_ = false;
 }
 
 //--------------------------------------------------------------
-bool ofxKuBufferRecorder::is_recording() {
+bool ofxKuRecorderBinary::is_recording() {
 	return recording_;
 }
 
 //--------------------------------------------------------------
-void ofxKuBufferRecorder::store_buffer(vector<unsigned char> &buffer) {
+void ofxKuRecorderBinary::store_buffer(vector<unsigned char> &buffer) {
 	if (recording_) {
 		string fileName = folder_ + "/" + ofToString(frame_,5,'0');
 		fileName = ofToDataPath(fileName);
@@ -41,7 +41,7 @@ void ofxKuBufferRecorder::store_buffer(vector<unsigned char> &buffer) {
 //--------------------------------------------------------------
 //--------------------------------------------------------------
 //--------------------------------------------------------------
-ofxKuBufferPlayer::ofxKuBufferPlayer() {
+ofxKuRecorderBinaryPlayer::ofxKuRecorderBinaryPlayer() {
 	playing_ = false;
 	fps_ = 30;
 
@@ -50,12 +50,12 @@ ofxKuBufferPlayer::ofxKuBufferPlayer() {
 }
 
 //--------------------------------------------------------------
-void ofxKuBufferPlayer::set_fps(float fps) {
+void ofxKuRecorderBinaryPlayer::set_fps(float fps) {
 	fps_ = fps;
 }
 
 //--------------------------------------------------------------
-void ofxKuBufferPlayer::start_play(string folder) {	//folder will be created
+void ofxKuRecorderBinaryPlayer::start_play(string folder) {	//folder will be created
 	folder_ = folder;
 	playing_ = true;
 	ofDirectory dir;
@@ -72,27 +72,27 @@ void ofxKuBufferPlayer::start_play(string folder) {	//folder will be created
 }
 
 //--------------------------------------------------------------
-void ofxKuBufferPlayer::stop_play() {
+void ofxKuRecorderBinaryPlayer::stop_play() {
 	playing_ = false;
 }
 
 //--------------------------------------------------------------
-bool ofxKuBufferPlayer::is_playing() {
+bool ofxKuRecorderBinaryPlayer::is_playing() {
 	return playing_;
 }
 
 //--------------------------------------------------------------
-bool ofxKuBufferPlayer::isFrameNew() {
+bool ofxKuRecorderBinaryPlayer::isFrameNew() {
 	return is_playing() && isFrameNew_;
 }
 
 //--------------------------------------------------------------
-vector<unsigned char> &ofxKuBufferPlayer::getBuffer() {	//please use buffer before next update() calling
+vector<unsigned char> &ofxKuRecorderBinaryPlayer::getBuffer() {	//please use buffer before next update() calling
 	return buffer_;
 }
 
 //--------------------------------------------------------------
-bool ofxKuBufferPlayer::get_next_frame() {
+bool ofxKuRecorderBinaryPlayer::get_next_frame() {
 	int n = files.size();
 	if (n==0) return false;
 	int f = frame_ % n;
@@ -113,7 +113,7 @@ bool ofxKuBufferPlayer::get_next_frame() {
 }
 
 //--------------------------------------------------------------
-void ofxKuBufferPlayer::update() {
+void ofxKuRecorderBinaryPlayer::update() {
 	if (is_playing()) {
 		float time = ofGetElapsedTimef();
 		float dt = ofClamp(time - time_, 0.001, 1);
