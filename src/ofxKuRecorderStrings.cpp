@@ -43,14 +43,15 @@ void ofxKuRecorderStrings::play_toggle() {
 }
 
 //--------------------------------------------------------------
-void ofxKuRecorderStrings::add_data_to_current_frame(string key, string value) {
+void ofxKuRecorderStrings::add_data(const string &key, const string &value) {
 	if (!frame_data_.empty()) frame_data_ += separator;
 	frame_data_ += key + separator + value;
 	//cout << "frame " << frame_data_ << endl;
 }
 
 //--------------------------------------------------------------
-string ofxKuRecorderStrings::get_data_from_current_frame(string key) {
+//Get data from the current frame
+string ofxKuRecorderStrings::get_data(const string &key) {
 	vector<string> item = ofSplitString(frame_data_, separator);  //TODO can work slow for big data and big number of keys
 	for (int i = 0; i < item.size(); i+=2) {
 		if (item[i] == key && (i + 1 < item.size())) {
@@ -65,11 +66,15 @@ void ofxKuRecorderStrings::next_frame() {
 	if (recording_) {
 		file.push_back(frame_data_);
 		frame_++;
+		frame_data_ = "";
 	}
 	if (playing_) {
-		frame_++;
 		if (frame_ >= file.size()) {
 			play_toggle();
+		}
+		else {
+			frame_data_ = file[frame_];
+			frame_++;
 		}
 	}
 }

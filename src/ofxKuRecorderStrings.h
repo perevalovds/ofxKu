@@ -2,8 +2,32 @@
 
 #include "ofMain.h"
 
-//Recording and reading data into text file
-//One frame is one string
+//ofxKuRecorderStrings - class for recording and reading data into text file, one frame is held in one string
+//
+//-------------- USAGE ------------------
+//Recording:
+//    Declare RECORDER as a global variable, and use such code for adding keys to current frame
+//    if (RECORDER.recording()) {
+//        RECORDER.add_data("time", ofToString(time));	
+//        RECORDER.add_data("dt", ofToString(dt));	
+//        RECORDER.add_data("pos", ofToString(position, " "));	
+//    }
+//    Finally, in the end of update store collected frame:
+//    if (RECORDER.recording()) {
+//        RECORDER.next_frame();
+//    }
+//Playing:
+//    Similarly, in any place of the code read values:
+//    if (RECORDER.playing()) {
+//        time = ofToFloat(RECORDER.get_data("time"));
+//        dt = ofToFloat(RECORDER.get_data("dt"));
+//        position = ofToPoint(RECORDER.get_data("pos"), " ");
+//    }
+//    And in the end of update() switch to the next frame: 
+//    if (RECORDER.playing()) {
+//	    RECORDER.next_frame();
+//    }
+//---------------------------------------------------------
 
 class ofxKuRecorderStrings {
 public:
@@ -19,13 +43,20 @@ public:
 
 	bool playing() { return playing_; }
 	bool recording() { return recording_; }
+	int frame() { return frame_; }
+	int frames() { return file.size(); }
 
-	//adds data to frame (one frame is one string)
+	//Add data to the current frame by key
 	//for example, key="matrix", key="bubble"
 	//for separating data, used separator variable, so records in a freame are: key,value,key,value,...
-	void add_data_to_current_frame(string key, string value);
+	void add_data(const string &key, const string &value);
+
+	//Get data from the current frame
+	string get_data(const string &key);
+
+	//Switch to the next frame in recording/playing modes
 	void next_frame();
-	string get_data_from_current_frame(string key);
+
 
 	vector<string> file;
 

@@ -1,7 +1,7 @@
 # ofxKu
-My extension for openFrameworks.
+Collection of various useful modules for openFrameworks which I used in various projects for a last years.
 
-It contains classes and functions for rendering, image analysis and working with files, which we are using in Kuflex projects.
+It contains classes and functions for graphics, image analysis and working with files.
 * Modules are relatively independent. 
 * Module ofxKuRasterOpenCV requires ofxOpenCv addon to work - if you don't need it, kust not include in your project.
 * ofxKuFileTime::isNewerThan function implementation doesn't works in oF >= 0.9.0, te simplest workaround is change it to return always 'true'.

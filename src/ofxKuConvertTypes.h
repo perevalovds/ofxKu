@@ -19,9 +19,13 @@ std::vector<std::string> ofToVectorString(const std::vector<T>& values) {
 std::vector<int> ofToVectorInt(const std::vector<string>& values);
 std::vector<float> ofToVectorFloat(const std::vector<string>& values);
 
+//Convert ofPoint to string and back
+std::string ofToString(const ofPoint &p, const std::string &separator);
+ofPoint ofToPoint(const std::string &s, const std::string &separator);
+
 
 //Convert matrix to string and back
-string ofxKuMatrixToString(const ofMatrix4x4 &matrix, string separator);
-ofMatrix4x4 ofxKuStringToMatrix(const string &s, string separator);
+string ofToString(const ofMatrix4x4 &matrix, string separator);
+ofMatrix4x4 ofToMatrix(const string &s, string separator);
 
 
