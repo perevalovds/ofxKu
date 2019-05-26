@@ -36,6 +36,7 @@ void ofxKuRecorderStrings::play_toggle() {
 	if (playing_) {
 		frame_ = 0;
 		frame_data_ = "";
+		next_frame();	//read the first frame
 	}
 	else {
 	}
