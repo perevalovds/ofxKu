@@ -81,6 +81,23 @@ void ofxKuRecorderStrings::next_frame() {
 }
 
 //--------------------------------------------------------------
+void ofxKuRecorderStrings::read_data() {	//read data for current frame
+	if (playing_) {
+		if (frame_ >= 0 && frame_ < file.size()) {
+			frame_data_ = file[frame_];
+		}
+	}
+}
+
+//--------------------------------------------------------------
+void ofxKuRecorderStrings::set_frame(int frame) {
+	if (playing_) {
+		frame_ = ofClamp(frame, 0, file.size());
+		read_data();
+	}
+}
+
+//--------------------------------------------------------------
 bool ofxKuRecorderStrings::save(string file_name) {
 	return ofxKuFileWriteStrings(file, file_name);
 }

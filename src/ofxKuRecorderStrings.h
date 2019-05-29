@@ -57,6 +57,9 @@ public:
 	//Switch to the next frame in recording/playing modes
 	void next_frame();
 
+	//Go to a frame, used only in player mode
+	void set_frame(int frame);		
+
 
 	vector<string> file;
 
@@ -67,6 +70,9 @@ public:
 
 	int frame_ = 0;
 	string frame_data_;
+
+protected:
+	void read_data();	//read data for current frame
 };
 
 
