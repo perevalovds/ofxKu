@@ -1,12 +1,19 @@
 #pragma once
 
 //ofxKuGeom - geometrical utils
+//Point clouds:
+// - minimal distance between two point sets
+//Polygons:
 // - signed triangle area
 // - compute if point is inside polygon
+//Sphere:
 // - convert points from unit square to unit sphere and back
 // - create circle on a unit sphere
 
 #include "ofMain.h"
+
+//Minimal distance between two point sets
+float ofxKuPointCloudsDistance(const vector<ofPoint> &A, const vector<ofPoint> &B);
 
 //Triangle area, signed, 2D
 float ofxKuGeomTriangleAreaSigned(const ofPoint &a, const ofPoint &b, const ofPoint &c);

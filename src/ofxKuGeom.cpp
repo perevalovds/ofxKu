@@ -2,6 +2,20 @@
 
 
 //--------------------------------------------------------
+//Minimal distance between two point sets
+float ofxKuPointCloudsDistance(const vector<ofPoint> &A, const vector<ofPoint> &B) {
+	if (A.empty() || B.empty()) return 0;
+	float d = A[0].distanceSquared(B[0]);
+	for (int i = 0; i < A.size(); i++) {
+		for (int j = 0; j < B.size(); j++) {
+			d = min(d, A[i].distanceSquared(B[j]));
+		}
+	}
+	return sqrt(fabs(d));
+}
+
+
+//--------------------------------------------------------
 
 //Convert [0,1]x[0,1] -> Unit Sphere
 ofPoint ofxKuGeomSquareToSphere(const ofPoint &p2) {

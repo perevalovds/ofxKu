@@ -24,10 +24,14 @@ It contains classes and functions for graphics, image analysis and working with 
 
 ## Geometry and meshes
 1. ofxKuGeom - geometrical utils
-   * signed triangle area
-   * compute if point is inside polygon
-   * convert points from unit square to unit sphere and back
-   * create circle on a unit sphere
+   * Point clouds:
+      * minimal distance between two point sets
+   * Polygons:
+      * signed triangle area
+      * compute if point is inside polygon
+   * Sphere:
+      * convert points from unit square to unit sphere and back
+      * create circle on a unit sphere
    
 
 2. ofxKuGeomMeshUtils - utilities for mesh
