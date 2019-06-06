@@ -35,19 +35,25 @@ void ofxKuProbability::setup(string density_file) {
 
 //--------------------------------------------------------------
 float ofxKuProbability::generate(float range0, float range1) {
-	if (n_ <= 1) return range0;
+	int I = generate_index();
+	return ofMap(I, 0, n_ - 1, range0, range1);
+}
+
+//--------------------------------------------------------------
+int ofxKuProbability::generate_index() {
+	if (n_ <= 1) return 0;
 	float p = ofRandom(0, 1);
 	float sum = 0;
 	int n = prob_.size();
 	int I = 0;
-	for (int i = 0; i<n; i++) {
+	for (int i = 0; i < n; i++) {
 		if (p <= sum) {
 			I = i;
 			break;
 		}
 		sum += prob_[i];
 	}
-	return ofMap(I, 0, n - 1, range0, range1);
+	return I;
 }
 
 //--------------------------------------------------------------

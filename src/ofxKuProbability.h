@@ -18,6 +18,7 @@ struct ofxKuProbability {
 	//...
 	void setup(string density_file);
 	float generate(float range0, float range1);
+	int generate_index();
 
 private:
 	vector<float> prob_;
