@@ -9,11 +9,12 @@ It contains classes and functions for graphics, image analysis and working with 
 ## Compression
   ofxKuCompress - RLE and bit compression
 
-## Converting
-  ofxKuConvertTypes
+## Strings
+  ofxKuStrings
    * convert matrix to string and back
    * convert vector<string> to vector<int>, vector<float> and back
-
+   * ofSplitString_many - advanced version of ofSplitString, which allows to use many one-char delimiters.
+   For example, this funtion allows to parse effectively "a(b,c)" with delimiters "(,)"
 
 ## Drawing
 * ofxKuRectRender class for fast rendering rectangles

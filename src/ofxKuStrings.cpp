@@ -1,4 +1,4 @@
-#include "ofxKuConvertTypes.h"
+#include "ofxKuStrings.h"
 
 
 //--------------------------------------------------------------
@@ -60,4 +60,39 @@ ofMatrix4x4 ofToMatrix(const string &s, string separator) {
 	}
 	return matrix;
 }
+
+//--------------------------------------------------------------
+//Advanced ofSplitString, which allows to use many one-char delimiters
+//For example, this function allows to parse effectively "a(b,c)" with delimiters "(,)"
+vector<string> ofSplitString_many(const string &source, const string &delimiters, bool ignoreEmpty, bool trim) {
+	vector<string> result;
+	if (delimiters.empty()) {
+		result.push_back(source);
+		return result;
+	}
+
+	string::const_iterator substart = source.begin();
+	string::const_iterator subend = substart;
+	while (true) {
+		if (subend == source.end() || (subend != source.end() && delimiters.find(subend[0]) != string::npos)) {
+			string sub(substart, subend);
+			if (trim) {
+				sub = ofTrim(sub);
+			}
+			if (!ignoreEmpty || !sub.empty()) {
+				result.push_back(sub);
+			}
+			if (subend == source.end()) {
+				break;
+			}
+			substart = subend + 1;
+			subend = substart;
+		}
+		else {
+			subend++;
+		}
+	}
+	return result;
+}
+
 //--------------------------------------------------------------

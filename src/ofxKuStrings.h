@@ -29,3 +29,8 @@ string ofToString(const ofMatrix4x4 &matrix, string separator);
 ofMatrix4x4 ofToMatrix(const string &s, string separator);
 
 
+//Advanced ofSplitString, which allows to use many one-char delimiters
+//For example, this function allows to parse effectively "a(b,c)" with delimiters "(,)"
+vector<string> ofSplitString_many(const string &source, const string &delimiters,
+	bool ignoreEmpty = false, bool trim = false);
+
