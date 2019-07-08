@@ -34,3 +34,8 @@ ofMatrix4x4 ofToMatrix(const string &s, string separator);
 vector<string> ofSplitString_many(const string &source, const string &delimiters,
 	bool ignoreEmpty = false, bool trim = false);
 
+//Is a string started with a given string
+bool ofStringStartsWith(const string &S, const string &prefix);
+
+
+
