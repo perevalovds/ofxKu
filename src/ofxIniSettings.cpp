@@ -1,4 +1,4 @@
-﻿#include "ofxIniSettings.h"
+#include "ofxIniSettings.h"
 
 /*
 ofxIniSettings - Released 22-1-2009 - by Rick Companje
@@ -23,7 +23,7 @@ cout << ini.get("section1.myString",(string)"") << endl;
 cout << ini.get("section1.myFloat",0.0f) << endl;
 cout << ini.get("section1.myInteger",0) << endl;
 cout << ini.get("section1.subsection.myInteger",0) << endl;
-cout << ini.get("section1.myVec3f",ofVec3f(0,0,0)) << endl;
+cout << ini.get("section1.myVec3f",ofxVec3f(0,0,0)) << endl;
 
 ini.outputFilename="settings.ini";
 ini.set("myBoolean",true);
@@ -100,22 +100,22 @@ vector<string> ofSplitString(string str, string delim=",") {
     return results;
 }
 
-/*ofVec2f ofToVec2f(string str) {
+/*ofxVec2f ofToVec2f(string str) {
     vector <string> v = ofSplitString(str);
-    if (v.size()==1) return ofVec2f(ofToFloat(v[0]),ofToFloat(v[0])); ///is dit gewenst?
-    if (v.size()!=2) return ofVec2f(0,0);
-    else return ofVec2f(ofToFloat(v[0]),ofToFloat(v[1]));
+    if (v.size()==1) return ofxVec2f(ofToFloat(v[0]),ofToFloat(v[0])); ///is dit gewenst?
+    if (v.size()!=2) return ofxVec2f(0,0);
+    else return ofxVec2f(ofToFloat(v[0]),ofToFloat(v[1]));
 }
 
-ofVec3f ofToVec3f(string str) {
+ofxVec3f ofToVec3f(string str) {
     vector <string> v = ofSplitString(str);
-    if (v.size()==1) return ofVec3f(ofToFloat(v[0]),ofToFloat(v[0]),ofToFloat(v[0])); ///is dit gewenst? .5 wordt dus (.5,.5,.5) wordt oa gebruikt voor scale.
-    if (v.size()!=3) return ofVec3f(0,0,0);
-    else return ofVec3f(ofToFloat(v[0]),ofToFloat(v[1]),ofToFloat(v[2]));
+    if (v.size()==1) return ofxVec3f(ofToFloat(v[0]),ofToFloat(v[0]),ofToFloat(v[0])); ///is dit gewenst? .5 wordt dus (.5,.5,.5) wordt oa gebruikt voor scale.
+    if (v.size()!=3) return ofxVec3f(0,0,0);
+    else return ofxVec3f(ofToFloat(v[0]),ofToFloat(v[1]),ofToFloat(v[2]));
 }
 
-ofVec3f ofToVec3f(float *a) {
-    return ofVec3f(a[0],a[1],a[2]);
+ofxVec3f ofToVec3f(float *a) {
+    return ofxVec3f(a[0],a[1],a[2]);
 }
 
 ofxVec4f ofToVec4f(string str) {
@@ -183,8 +183,8 @@ string   ofxIniSettings::get(string key, string   defaultValue) { return has(key
 int      ofxIniSettings::get(string key, int      defaultValue) { return has(key) ? ofToInteger(keys[key]) : defaultValue; }
 float    ofxIniSettings::get(string key, float    defaultValue) { return has(key) ? ofToFloat(keys[key]) : defaultValue; }
 bool     ofxIniSettings::get(string key, bool     defaultValue) { return has(key) ? ofToBoolean(keys[key]) : defaultValue; }
-//ofVec2f ofxIniSettings::get(string key, ofVec2f defaultValue) { return has(key) ? ofToVec2f(keys[key]) : defaultValue; }
-//ofVec3f ofxIniSettings::get(string key, ofVec3f defaultValue) { return has(key) ? ofToVec3f(keys[key]) : defaultValue; }
+//ofxVec2f ofxIniSettings::get(string key, ofxVec2f defaultValue) { return has(key) ? ofToVec2f(keys[key]) : defaultValue; }
+//ofxVec3f ofxIniSettings::get(string key, ofxVec3f defaultValue) { return has(key) ? ofToVec3f(keys[key]) : defaultValue; }
 //ofxVec4f ofxIniSettings::get(string key, ofxVec4f defaultValue) { return has(key) ? ofToVec4f(keys[key]) : defaultValue; }
 //ofRectangle ofxIniSettings::get(string key, ofRectangle defaultValue) { return has(key) ? ofToRectangle(keys[key]) : defaultValue; }
 

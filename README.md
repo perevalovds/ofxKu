@@ -72,5 +72,5 @@ also can be linked with ofxKuTextGui GUI system.
 * ofxKuRecorderStrings class for storing string data in frames in a text file
 * ofxKuFile - write and read text files as vector of strings
 * ofxKuFileTime::isNewerThan(string fileName1, string fileName2) function which compares file creation times
-
-
+* ofxIniSettings - addon for working with INI-files, by Rick Companje
+* ofxArgs - addon for working with command line arguments, by Pat Long

@@ -1,4 +1,4 @@
-﻿#ifndef OFX_INISETTINGS_H
+#ifndef OFX_INISETTINGS_H
 #define OFX_INISETTINGS_H
 
 /************************************************************
@@ -41,8 +41,8 @@ public:
     bool get(string key, bool defaultValue);
     float get(string key, float defaultValue);
     string get(string key, string defaultValue);
-    //ofVec2f get(string key, ofVec2f defaultValue);
-    //ofVec3f get(string key, ofVec3f defaultValue);
+    //ofxVec2f get(string key, ofxVec2f defaultValue);
+    //ofxVec3f get(string key, ofxVec3f defaultValue);
     //ofxVec4f get(string key, ofxVec4f defaultValue);
     ofRectangle get(string key, ofRectangle defaultValue);
 
