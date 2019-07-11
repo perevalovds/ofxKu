@@ -14,13 +14,8 @@ Version: 0.1
 
 ************************************************************/
 
-//#include <conio.h>
-#include <fstream>
-#include <iostream>
-#include <map>
 
 #include "ofMain.h"
-//#include "ofxVectorMath.h"
 
 class ofxIniSettings {
 public:
