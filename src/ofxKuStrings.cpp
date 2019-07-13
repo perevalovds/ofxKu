@@ -102,3 +102,9 @@ bool ofStringStartsWith(const string &S, const string &prefix) {
 }
 
 //--------------------------------------------------------------
+//Is a string ended with a given string
+bool ofStringEndsWith(const string &S, const string &suffix) {
+	return (S.length() >= suffix.length() && S.substr(S.length() - suffix.length()) == suffix);
+}
+
+//--------------------------------------------------------------
