@@ -24,7 +24,7 @@ struct ofxKuRasterRGB8 {
 	int h = 0;
 	vector<ofxKuRasterPixelRGB8> pixels;
 
-	unsigned char *pixels_pointer() { return &pixels[0]; }
+	unsigned char *pixels_pointer() { return (unsigned char *)&pixels[0]; }
 
 	void allocate(int w0, int h0) {
 		w = w0;
