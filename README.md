@@ -23,7 +23,7 @@ It contains classes and functions for graphics, image analysis and working with 
 * ofxKuDrawTextureFit(ofTexture &tex, float x, float y, float w, float h) function in ofxKuDrawUtils for fitting texture in rectangle
 * ofxKuDrawRaster draws raster array
 
-## Geometry and meshes
+## Geometry, meshes and point clouds
 1. ofxKuGeom - geometrical utils
    * Point clouds:
       * minimal distance between two point sets
@@ -40,6 +40,11 @@ It contains classes and functions for graphics, image analysis and working with 
    * computing normals
    * make wireframed mesh from triangle mesh
    * shuffle verties and triangles
+
+3. Point clouds:
+   * ofxKuPcManipulate - move, rotate and crop point clouds
+   * ofxKuPcRasterize - rasterize and get blobs from point clouds
+   * also see ofxKuGeom for point sets operations
 
 ## Graphics
 * ofxKuGraphicsTexture3D - class implementing 3D GPU texture for programmable rendering pipeline
