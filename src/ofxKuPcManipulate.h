@@ -1,11 +1,11 @@
 #pragma once
 
-//Calibrating Kinect / floor
+//Moving, rotating and cropping point clouds
 
 #include "ofMain.h"
-#include "General.h"
 
-struct Calibrate3D {	
+/*
+struct ofxKuPcManipulate {	
 	void setup(string matrix = "");	//string describing matrix 4x4, a11 a12 ... a
 	string packToString();			//for saving somethere
 
@@ -34,4 +34,4 @@ protected:
 
 };
 
-
+*/

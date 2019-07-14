@@ -1,8 +1,8 @@
-#include "Calibrate3D.h"
-#include "gui_generated.h"
+#include "ofxKuPcManipulate.h"
+
 
 //--------------------------------------------------------------
-void Calibrate3D::setup(string matrix) {
+/*void ofxKuPcManipulate::setup(string matrix) {
 	reset_main();
 	vector<string> a = ofSplitString(matrix, " ");
 	if (a.size() >= 16) {
@@ -15,7 +15,7 @@ void Calibrate3D::setup(string matrix) {
 }
 
 //--------------------------------------------------------------
-void Calibrate3D::reset_main() {
+void ofxKuPcManipulate::reset_main() {
 	matrix_main_.makeIdentityMatrix();
 	change_scale(0.001);
 	change_scale(1, -1, 1);
@@ -23,7 +23,7 @@ void Calibrate3D::reset_main() {
 
 
 //--------------------------------------------------------------
-string Calibrate3D::packToString() {			//for saving somethere
+string ofxKuPcManipulate::packToString() {			//for saving somethere
 	const float *v = matrix_main_.getPtr();
 	string s = "";
 	for (int i = 0; i < 16; i++) {
@@ -34,7 +34,7 @@ string Calibrate3D::packToString() {			//for saving somethere
 }
 
 //--------------------------------------------------------------
-void Calibrate3D::update(bool edit) {
+void ofxKuPcManipulate::update(bool edit) {
 	//scale редактируется всегда, а остальные - если edit
 
 	change_scale(1 + PRM clb_mscl*0.001);
@@ -68,7 +68,7 @@ void Calibrate3D::update(bool edit) {
 }
 
 //--------------------------------------------------------------
-void Calibrate3D::update_finish_all() {
+void ofxKuPcManipulate::update_finish_all() {
 	PRM clb_RESET = 0;
 	PRM clb_mx = PRM clb_my = PRM clb_mz = 0;
 	PRM	clb_mrotx = 0;
@@ -82,7 +82,7 @@ void Calibrate3D::update_finish_all() {
 
 
 //--------------------------------------------------------------
-void Calibrate3D::draw(vector<ofPoint> &pnt, ofColor color) {
+void ofxKuPcManipulate::draw(vector<ofPoint> &pnt, ofColor color) {
 
 	float W = ofGetWidth();
 	float H = ofGetHeight();
@@ -146,12 +146,12 @@ void Calibrate3D::draw(vector<ofPoint> &pnt, ofColor color) {
 }
 
 //--------------------------------------------------------------
-ofMatrix4x4 Calibrate3D::get_matrix() {
+ofMatrix4x4 ofxKuPcManipulate::get_matrix() {
 	return matrix_main_;
 }
 
 //--------------------------------------------------------------
-void Calibrate3D::transform(vector<ofPoint> &points_in, vector<ofPoint> &points_out) {
+void ofxKuPcManipulate::transform(vector<ofPoint> &points_in, vector<ofPoint> &points_out) {
 	int n = points_in.size();
 	points_out = points_in;
 	ofMatrix4x4 matrix = get_matrix();
@@ -182,7 +182,7 @@ void Calibrate3D::transform(vector<ofPoint> &points_in, vector<ofPoint> &points_
 }
 
 //--------------------------------------------------------------
-void Calibrate3D::rotate(ofPoint direction, float degrees) {
+void ofxKuPcManipulate::rotate(ofPoint direction, float degrees) {
 	if (degrees == 0) return;
 	ofMatrix4x4 m;
 	m.makeRotationMatrix(degrees, direction.x, direction.y, direction.z);
@@ -190,7 +190,7 @@ void Calibrate3D::rotate(ofPoint direction, float degrees) {
 }
 
 //--------------------------------------------------------------
-void Calibrate3D::move(float x, float y, float z) {
+void ofxKuPcManipulate::move(float x, float y, float z) {
 	if (x == 0 && y == 0 && z == 0) return;
 	ofMatrix4x4 m;
 	m.makeTranslationMatrix(ofPoint(x,y,z));
@@ -199,17 +199,17 @@ void Calibrate3D::move(float x, float y, float z) {
 }
 
 //--------------------------------------------------------------
-void Calibrate3D::change_scale(float scl) {
+void ofxKuPcManipulate::change_scale(float scl) {
 	if (scl == 1) return;
 	change_scale(scl, scl, scl);
 }
 
 //--------------------------------------------------------------
-void Calibrate3D::change_scale(float sclx, float scly, float sclz) {	//for flips
+void ofxKuPcManipulate::change_scale(float sclx, float scly, float sclz) {	//for flips
 	ofMatrix4x4 m;
 	m.makeScaleMatrix(sclx, scly, sclz);
 	matrix_main_ *= m;
 }
 
 //--------------------------------------------------------------
- 
+ */
