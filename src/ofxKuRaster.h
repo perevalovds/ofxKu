@@ -35,5 +35,8 @@ struct ofxKuRasterRGB8 {
 		w = h = 0;
 		pixels.resize(0);	//TODO not freeing real memory; to achieve it, we need to use vector<...> *pixels;
 	}
+	bool empty() {
+		return w == 0 && h == 0;
+	}
 };
 
