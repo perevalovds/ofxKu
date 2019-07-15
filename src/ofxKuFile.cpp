@@ -1,9 +1,9 @@
 #include "ofxKuFile.h"
 
 //--------------------------------------------------------------------------------
-bool ofxKuFileExists( string fileName )
+bool ofxKuFileExists( string fileName, bool use_data_path)
 {
-	fileName = ofToDataPath(fileName);
+	if (use_data_path) fileName = ofToDataPath(fileName);
 	ifstream inp;
 	inp.open(fileName.c_str(), ifstream::in);
 	inp.close();
@@ -11,9 +11,9 @@ bool ofxKuFileExists( string fileName )
 }
 
 //--------------------------------------------------------------------------------
-int ofxKuFileSize( string fileName )
+int ofxKuFileSize( string fileName, bool use_data_path)
 {
-	fileName = ofToDataPath(fileName);
+	if (use_data_path) fileName = ofToDataPath(fileName);
 	FILE *file = fopen( fileName.c_str(), "rb" );
 	fseek( file, 0, SEEK_END );
 	int size = ftell( file );	//TODO use size_t for big files
@@ -22,11 +22,11 @@ int ofxKuFileSize( string fileName )
 }
 
 //--------------------------------------------------------------------------------
-vector<string> ofxKuFileReadStrings( string fileName )
+vector<string> ofxKuFileReadStrings( string fileName, bool use_data_path)
 {
-	fileName = ofToDataPath(fileName);
+	if (use_data_path) fileName = ofToDataPath(fileName);
 	vector<string> list;
-	if ( ofxKuFileExists( fileName ) ) {
+	if ( ofxKuFileExists( fileName, use_data_path) ) {
 		ifstream f(fileName.c_str(),ios::in);
 		string line;
 		while (getline(f,line)) {
@@ -37,14 +37,29 @@ vector<string> ofxKuFileReadStrings( string fileName )
 }
 
 //--------------------------------------------------------------------------------
-bool ofxKuFileWriteStrings( const vector<string> &list, string fileName )
+string ofxKuFileReadString(string file_name, bool use_data_path) {
+	vector<string> file = ofxKuFileReadStrings(file_name, use_data_path);
+	if (!file.empty()) return file[0];
+	return "";
+}
+
+//--------------------------------------------------------------------------------
+bool ofxKuFileWriteStrings( const vector<string> &list, string fileName, bool use_data_path)
 {
-	fileName = ofToDataPath(fileName);
+	if (use_data_path) fileName = ofToDataPath(fileName);
+
 	ofstream f(fileName.c_str(),ios::out);
 	for ( int i=0; i<list.size(); i++ ) {
 		f << list[i] << endl;
 	}
 	return true;
+}
+
+//--------------------------------------------------------------------------------
+bool ofxKuFileWriteString(const string &line, string fileName, bool use_data_path) {
+	vector<string> file;
+	file.push_back(line);
+	return ofxKuFileWriteStrings(file, fileName, use_data_path);
 }
 
 //--------------------------------------------------------------------------------
