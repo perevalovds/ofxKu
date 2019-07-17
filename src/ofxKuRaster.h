@@ -16,6 +16,14 @@ struct ofxKuRasterPixelRGB8 {
 	unsigned char r = 0;
 	unsigned char g = 0;
 	unsigned char b = 0;
+	ofxKuRasterPixelRGB8() {}
+	ofxKuRasterPixelRGB8(unsigned char v) { r = g = b = v; }
+	ofxKuRasterPixelRGB8(unsigned char r0, unsigned char g0, unsigned char b0) { 
+		r = r0;
+		g = g0;
+		b = b0;
+	}
+
 };
 
 //RGB8 raster
@@ -39,7 +47,7 @@ struct ofxKuRasterRGB8 {
 		return w == 0 && h == 0;
 	}
 
-	void fill(ofxKuRasterPixelRGB8 value) {
+	void fill(ofxKuRasterPixelRGB8 value = ofxKuRasterPixelRGB8(0)) {
 		for (int i = 0; i < w*h; i++) {
 			pixels[i] = value;
 		}
