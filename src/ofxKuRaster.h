@@ -11,7 +11,7 @@
 #include "ofxKuRasterResize.h"
 #include "ofxKuFloodFill.h"
 
-//RGB8 pixel
+//RGB8 pixel, actually as ofColor
 struct ofxKuRasterPixelRGB8 {
 	unsigned char r = 0;
 	unsigned char g = 0;
@@ -22,6 +22,12 @@ struct ofxKuRasterPixelRGB8 {
 		r = r0;
 		g = g0;
 		b = b0;
+	}
+	ofxKuRasterPixelRGB8(const ofColor &c) {
+		r = c.r;
+		g = c.g;
+		b = c.b;
+
 	}
 
 };
