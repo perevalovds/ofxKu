@@ -4,9 +4,9 @@
 
 #include "ofMain.h"
 
-//mean value of the projection vector
+//mean index of the histogram
 template <typename T>
-double ofxKuMathMeanProj(const vector<T> &input) {
+double ofxKuMathMeanIndex(const vector<T> &input) {
 	int n = input.size();
 	if (n==0) return 0;
 	double M = 0;
@@ -19,9 +19,9 @@ double ofxKuMathMeanProj(const vector<T> &input) {
 	return M;
 }
 
-//median value of the projection vector
+//median index of the histogram
 template <typename T>
-double ofxKuMathMedianProj(const vector<T> &input) {
+double ofxKuMathMedianIndex(const vector<T> &input) {
 	int n = input.size();
 	if (n==0) return 0;
 	double sum = 0;
@@ -36,7 +36,6 @@ double ofxKuMathMedianProj(const vector<T> &input) {
 	}
 	return n-1;
 }
-
 
 //argmax, returns first index where maximal value is achieved
 template <typename T>
