@@ -38,5 +38,13 @@ struct ofxKuRasterRGB8 {
 	bool empty() {
 		return w == 0 && h == 0;
 	}
+
+	void fill(ofxKuRasterPixelRGB8 value) {
+		for (int i = 0; i < w*h; i++) {
+			pixels[i] = value;
+		}
+	}
+
 };
+
 
