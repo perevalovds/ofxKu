@@ -62,17 +62,17 @@ count number of pixels in range, project on axes, histogram for raster arrays
 * ofxKuRasterOpenCV - gaussian smoothing, convex hull, implemented using OpenCV. Requires ofxOpenCv addon.
 
 ## Statistics
-* ofxKuMathStat - compute median value of the vector
+* ofxKuMathStat - computes mean and median index of histogram value and argmax
 
 ## Values
 * ofxKuValueCheckChange - checks if value was changed
-* ofxKuSlowBit - bit, controllable changing it state
+* ofxKuSlowBit - bit, which controllable changes it state in time
 
 ## Presets
 * ofxKuPreset - presets maintaining system, including smooth transition,
 also can be linked with ofxKuTextGui GUI system.
 
-## File utilities
+## File and system utilities
 * ofxKuRecorderBinary class for recording/replaying data buffers, such as depth camera point clouds
 * ofxKuRecorderStrings class for storing string data in frames in a text file
 * ofxKuFile - write and read text files as vector of strings
