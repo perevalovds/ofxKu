@@ -17,9 +17,9 @@ void ofxKuLoadObjFile(ofMesh &mesh, string fileName, bool useTex,
 	mesh.clear();
 	vector<string> lines = ofxKuFileReadStrings(ofToDataPath(fileName));
 
-	vector<ofPoint> v;      //вершины
-	vector<ofIndexType> t;  //индексы треугольников, тройками
-	vector<ofVec2f> tex;    //текстурные координаты
+	vector<glm::vec3> v;      //vertices
+	vector<ofIndexType> t;  //indices for triangles
+	vector<glm::vec2> tex;    //texture coords
 
 	ofPoint p;
 	int f[4];
@@ -30,14 +30,14 @@ void ofxKuLoadObjFile(ofMesh &mesh, string fileName, bool useTex,
 		int n = list.size();
 		if (n > 0) {
 			if (list[0] == "v" && n >= 4) {
-				v.push_back(ofPoint(
+				v.push_back(glm::vec3(
 					ofToFloat(list[1]),
 					ofToFloat(list[2]),
 					ofToFloat(list[3])
 				));
 			}
 			if (useTex && list[0] == "vt" && n >= 3) {
-				tex.push_back(ofVec2f(
+				tex.push_back(glm::vec2(
 					ofToFloat(list[1]) * texW,
 					ofToFloat(list[2]) * texH
 				));
@@ -68,13 +68,13 @@ void ofxKuLoadObjFile(ofMesh &mesh, string fileName, bool useTex,
 	cout << "   processing..." << endl;
 	//нормализация в куб [-1,1]x[-1,1]x[-1,1]
 	if (normalize) {
-		ofPoint p0 = ofPoint(0);
-		ofPoint p1 = p0;
+		glm::vec3 p0 = ofPoint(0);
+		glm::vec3 p1 = p0;
 		if (v.size() > 0) {
 			p0 = v[0];
 			p1 = p0;
 			for (int i = 0; i < v.size(); i++) {
-				ofPoint &p = v[i];
+				glm::vec3 &p = v[i];
 				p0.x = min(p0.x, p.x);
 				p0.y = min(p0.y, p.y);
 				p0.z = min(p0.z, p.z);
@@ -83,8 +83,8 @@ void ofxKuLoadObjFile(ofMesh &mesh, string fileName, bool useTex,
 				p1.z = max(p1.z, p.z);
 			}
 		}
-		ofPoint c = (p0 + p1) * 0.5;
-		ofPoint delta = p1 - p0;
+		glm::vec3 c = (p0 + p1) * 0.5;
+		glm::vec3 delta = p1 - p0;
 		float scl = delta.x;
 		scl = max(scl, delta.y);
 		scl = max(scl, delta.z);
@@ -92,7 +92,7 @@ void ofxKuLoadObjFile(ofMesh &mesh, string fileName, bool useTex,
 			scl = 1.0 / scl;
 		}
 		for (int j = 0; j < v.size(); j++) {
-			ofPoint &p = v[j];
+			glm::vec3 &p = v[j];
 			p = (p - c) * scl;
 		}
 	}
@@ -134,11 +134,11 @@ void ofxKuLoadObjFile(ofMesh &mesh, string fileName, bool useTex,
 void ofxKuSaveObjFile(ofMesh &mesh, string fileName, bool setupNormals,
 	bool textured, string mtl_file, int texW, int texH) {	//sets normals and so change mesh!
 
-	vector<ofPoint> &v = mesh.getVertices();
+	auto &v = mesh.getVertices();
 	int n = v.size();
 
-	vector<ofVec2f> &vt = mesh.getTexCoords();
-	vector<ofPoint> &vn = mesh.getNormals();
+	auto &vt = mesh.getTexCoords();
+	auto &vn = mesh.getNormals();
 
 	vector<GLuint> &ind = mesh.getIndices();
 	int m = ind.size() / 3;
@@ -198,7 +198,7 @@ void ofxKuSaveObjFile(ofMesh &mesh, string fileName, bool setupNormals,
 
 //--------------------------------------------------------
 //shuffle vertices and triangles
-void ofxKuMeshShuffle(vector<ofPoint> &v, vector<ofIndexType> &t, vector<ofVec2f> &tex,
+void ofxKuMeshShuffle(vector<glm::vec3> &v, vector<ofIndexType> &t, vector<glm::vec2> &tex,
 	bool useTex, float shuffle_count) {
 
 	int n = v.size();
@@ -220,12 +220,12 @@ void ofxKuMeshShuffle(vector<ofPoint> &v, vector<ofIndexType> &t, vector<ofVec2f
 			swap(vto[i], vto[j]);
 		}
 	}
-	vector<ofPoint> v1 = v;
+	auto v1 = v;
 	for (int i = 0; i < n; i++) {
 		v[i] = v1[vto[i]];
 	}
 	if (useTex && tex.size() >= n) {
-		vector<ofVec2f> tex1 = tex;
+		auto tex1 = tex;
 		for (int i = 0; i < n; i++) {
 			tex[i] = tex1[vto[i]];
 		}
@@ -264,7 +264,7 @@ void ofxKuSetNormals(ofMesh &mesh) {
 	//The number of the triangles
 	int nT = mesh.getNumIndices() / 3;
 
-	vector<ofPoint> norm(nV); //Array for the normals
+	vector<glm::vec3> norm(nV); //Array for the normals
 
 	//Scan all the triangles. For each triangle add its
 	//normal to norm's vectors of triangle's vertices
@@ -291,7 +291,8 @@ void ofxKuSetNormals(ofMesh &mesh) {
 
 	//Normalize the normal's length
 	for (int i = 0; i < nV; i++) {
-		norm[i].normalize();
+		//norm[i].normalize();
+		glm::normalize(norm[i]);
 	}
 
 	//Set the normals to mesh
@@ -302,7 +303,7 @@ void ofxKuSetNormals(ofMesh &mesh) {
 //--------------------------------------------------------
 void ofxKuCreateWireframe(ofMesh &mesh, ofMesh &mesh_out) { //for triangle mesh
 
-	vector<ofPoint> &v = mesh.getVertices();
+	auto &v = mesh.getVertices();
 	int n = v.size();
 
 	vector<GLuint> &ind = mesh.getIndices();

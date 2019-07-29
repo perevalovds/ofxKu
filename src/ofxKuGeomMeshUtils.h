@@ -25,7 +25,7 @@ void ofxKuCreateWireframe(ofMesh &mesh, ofMesh &mesh_out);	//for triangle mesh
 void ofxKuSetNormals( ofMesh &mesh );
 
 //shuffle vertices and triangles
-void ofxKuMeshShuffle( vector<ofPoint> &v, vector<ofIndexType> &t, vector<ofVec2f> &tex,
+void ofxKuMeshShuffle( vector<glm::vec3> &v, vector<ofIndexType> &t, vector<glm::vec2> &tex,
                    bool useTex = true, float shuffle_count=2 );
 
 //-------------------------
