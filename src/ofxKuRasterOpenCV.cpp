@@ -1,6 +1,7 @@
 #include "ofxKuRasterOpenCV.h"
 #include "ofxOpenCv.h"
 #include "ofxKuRaster.h"
+#include "tracking.hpp"
 
 //-------------------------------------------------------------
 void ofxKuRasterGaussSmooth( vector<float> &mask, int w, int h, int rad, vector<float> &res )
@@ -153,5 +154,62 @@ void ofxKuRasterFieldDirection( vector<float> &energy, int w, int h, int step, v
 */
 
 //-------------------------------------------------------------
+void ofxKuOpticalFlowFarneback(ofPixels &pix_gray1, ofPixels &pix_gray2, float scale, vector<ofVec2f> &flow_out, int &w, int &h) {
+	ofxCvGrayscaleImage gray1_, gray2_;
+	gray1_.setUseTexture(false);
+	gray2_.setUseTexture(false);
+	gray1_.setFromPixels(pix_gray1);
+	gray2_.setFromPixels(pix_gray2);
+
+	ofxCvGrayscaleImage gray1, gray2;
+	gray1.setUseTexture(false);
+	gray2.setUseTexture(false);
+
+	gray1.allocate(gray1_.width * scale, gray1_.height * scale);
+	gray2.allocate(gray1_.width * scale, gray1_.height * scale);
+
+	gray1.scaleIntoMe(gray1_, CV_INTER_AREA);
+	gray2.scaleIntoMe(gray2_, CV_INTER_AREA);
+
+	//imageDecimated.allocate(color1.width * scale_input, color1.height * scale_input);
+	//imageDecimated.scaleIntoMe(color1, CV_INTER_AREA);
+	//gray1 = imageDecimated;
+
+	w = gray1.width;
+	h = gray1.height;
+
+	//TODO check w,h>0
+
+	cv::Mat img1 = cv::cvarrToMat(gray1.getCvImage());
+	cv::Mat img2 = cv::cvarrToMat(gray2.getCvImage());
+	
+	cv::Mat flow;
+	//Calling native OpenCV function for computing optical flow
+	cv::calcOpticalFlowFarneback(img1, img2, flow, 0.7, 3, 11, 5, 5, 1.1, 0);
+	vector<cv::Mat> flowPlanes;
+	cv::split(flow, flowPlanes);
+
+	ofxCvFloatImage flowX, flowY;
+
+	IplImage iplX(flowPlanes[0]);
+	flowX.allocate(w, h);
+	flowX = &iplX;
+	IplImage iplY(flowPlanes[1]);
+	flowY.allocate(w, h);
+	flowY = &iplY;
+
+	//read to vector array
+	float *flowXFloats = flowX.getPixelsAsFloats(); 
+	float *flowYFloats = flowY.getPixelsAsFloats(); 
+
+	flow_out.resize(w*h);
+	for (int i = 0; i < w*h; i++) {
+		flow_out[i] = ofVec2f(flowXFloats[i], flowYFloats[i]);
+	}
+
+
+}
+
+
 
 //-------------------------------------------------------------

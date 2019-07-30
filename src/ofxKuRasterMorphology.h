@@ -56,6 +56,26 @@ void ofxKuRasterErode(const vector<T> &input, vector<T> &output,
 	}
 }
 
+//Find and colorize boundary points for binary images (0 and not 0)
+//Can be used for shrinking boundary instead erode
+//NOTE: current implementation eats image frame's boundary
+template <typename T>
+void ofxKuRasterPaintBoundary(const vector<T> &input, vector<T> &output,
+	int w, int h, int paint_boundary_color) {
+	output = input;
+	for (int y = 1; y < h - 1; y++) {
+		for (int x = 1; x < w - 1; x++) {
+			int i = x + w * y;
+			if (input[i] > 0
+				&& (input[i - 1] == 0 || input[i + 1] == 0
+					|| input[i - w] == 0 || input[i + w] == 0)) {
+				output[i] = paint_boundary_color;
+			}
+		}
+	}
+}
+
+
 //Find boundary points - it is points with value > threshold, and having at least one pixel in cross neighborhood with value <= threshold
 //Point class - can be any class having x,y fields, for example, ofPoint or CvPoint.
 template <typename T, typename PointClass>

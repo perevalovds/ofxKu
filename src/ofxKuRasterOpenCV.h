@@ -13,6 +13,9 @@ void ofxKuRasterResized( vector<float> &mask, int w, int h, int rad, vector<floa
 //Field direction
 void ofxKuRasterFieldDirection( vector<float> &energy, int w, int h, int step, vector<ofPoint> &res );
 
+//Farneback optical flow
+void ofxKuOpticalFlowFarneback(ofPixels &pix_gray1, ofPixels &pix_gray2, float scale, vector<ofVec2f> &flow_out, int &w, int &h);
+
 //Convex hull
 //void ofxKuRasterConvexHull( vector<unsigned char> &input, vector<unsigned char> &output, int w, int h, int threshold );
 
