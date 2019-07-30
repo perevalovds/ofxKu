@@ -101,7 +101,7 @@ void ofxKuRasterFieldDirection( vector<float> &energy, int w, int h, int step, v
 }
 */
 //-------------------------------------------------------------
-void ofxKuRasterConvexHull( vector<unsigned char> &input, vector<unsigned char> &output, int w, int h, int threshold ) {
+/*void ofxKuRasterConvexHull( vector<unsigned char> &input, vector<unsigned char> &output, int w, int h, int threshold ) {
 
 	output.resize(w*h);
 	fill(output.begin(), output.end(), 0);
@@ -150,7 +150,7 @@ void ofxKuRasterConvexHull( vector<unsigned char> &input, vector<unsigned char> 
 		}	
 	}
 }
-
+*/
 
 //-------------------------------------------------------------
 
