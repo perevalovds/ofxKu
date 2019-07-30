@@ -37,6 +37,10 @@ vector<string> ofSplitString_many(const string &source, const string &delimiters
 //Is a string started with a given string
 bool ofStringStartsWith(const string &S, const string &prefix);
 
+//Is a string started with a any of given strings
+bool ofStringStartsWith(const string &S, const vector<string> &prefix);
+
+
 //Is a string ended with a given string
 bool ofStringEndsWith(const string &S, const string &suffix);
 

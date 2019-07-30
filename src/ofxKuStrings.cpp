@@ -102,6 +102,15 @@ bool ofStringStartsWith(const string &S, const string &prefix) {
 }
 
 //--------------------------------------------------------------
+//Is a string started with a any of given strings
+bool ofStringStartsWith(const string &S, const vector<string> &prefix) {
+	for (auto &pref : prefix) {
+		if (ofStringStartsWith(S, pref)) return true;
+	}
+	return false;
+}
+
+//--------------------------------------------------------------
 //Is a string ended with a given string
 bool ofStringEndsWith(const string &S, const string &suffix) {
 	return (S.length() >= suffix.length() && S.substr(S.length() - suffix.length()) == suffix);
