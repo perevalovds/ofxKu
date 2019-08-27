@@ -6,8 +6,9 @@ It contains classes and functions for graphics, image analysis and working with 
 * Module ofxKuRasterOpenCV requires ofxOpenCv addon to work - if you don't need it, kust not include in your project.
 * ofxKuFileTime::isNewerThan function implementation doesn't works in oF >= 0.9.0, te simplest workaround is change it to return always 'true'.
 
-## Compression
+## Compression and hash
   ofxKuCompress - RLE and bit compression
+  ofxKuHashCrc32 - computing CRC32 hash
 
 ## Strings
   ofxKuStrings
