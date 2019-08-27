@@ -13,6 +13,9 @@ bool ofxKuFileExists( string fileName, bool use_data_path)
 //--------------------------------------------------------------------------------
 int ofxKuFileSize( string fileName, bool use_data_path)
 {
+	if (!ofxKuFileExists(fileName, use_data_path)) {
+		return 0;
+	}
 	if (use_data_path) fileName = ofToDataPath(fileName);
 	FILE *file = fopen( fileName.c_str(), "rb" );
 	fseek( file, 0, SEEK_END );
