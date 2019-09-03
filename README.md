@@ -3,8 +3,9 @@ Collection of various useful modules for openFrameworks which I used in various 
 
 It contains classes and functions for graphics, image analysis and working with files.
 * Modules are relatively independent. 
-* Module ofxKuRasterOpenCV requires ofxOpenCv addon to work - if you don't need it, kust not include in your project.
-* ofxKuFileTime::isNewerThan function implementation doesn't works in oF >= 0.9.0, te simplest workaround is change it to return always 'true'.
+* Module ofxKuRasterOpenCV requires ofxOpenCv addon, if you don't need it, just not include in your project.
+* Module ofxKuMessageLog requires ofxFontStash addon, if you don't need it, just not include in your project.
+* ofxKuFileTime::isNewerThan function implementation doesn't works in oF >= 0.9.0, so simplest workaround is change it to return always 'true'.
 
 ## Compression and hash
   ofxKuCompress - RLE and bit compression
@@ -80,3 +81,6 @@ also can be linked with ofxKuTextGui GUI system.
 * ofxKuFileTime::isNewerThan(string fileName1, string fileName2) function which compares file creation times
 * ofxIniSettings - addon for working with INI-files, by Rick Companje
 * ofxArgs - addon for working with command line arguments, by Pat Long
+
+## Logging
+* ofxKuMessageLog - class for output logs on the screen. Note: requires ofxFontStash addon for drawing text on the screen.
