@@ -53,7 +53,7 @@ void ofxKuMessageLog::draw() {
 	ofPoint &pos = params.pos;
 	for (int i = 0; i < lines.size(); i++) {
 		ofSetColor(colors[i]);
-		font.draw(lines[i], params.size, pos.x, pos.y + i * params.size);
+		font.draw(lines[i], params.font_size, pos.x, pos.y + i * params.font_size);
 	}
 	//string s = ofJoinString(lines, "\n");
 	//font.drawMultiLine(s, params.size, params.pos.x, params.pos.y);

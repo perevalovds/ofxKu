@@ -28,7 +28,7 @@ MLOGGER.draw();
 
 struct ofxKuMessageLogParams {
 	ofColor color;
-	float size = 30;
+	float font_size = 30;
 	ofPoint pos = ofPoint(300, 20);
 
 	int capacity = 30;
