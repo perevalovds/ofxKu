@@ -12,9 +12,13 @@ struct ofxKuOsWindows {
 	//Make current oF window borderless
 	static void SetMainWindowBorderless();	
 
-	//Set size fo position of the current oF window
+	//Restore current oF window border
+	static void RestoreMainWindowBorder();
+
+	//Set size and position of the current oF window
 	//(works more stable that oF implementation
 	static void SetMainWindowPositionSize(int x, int y, int w, int h);
+
 
 	//Show and hide console window
 	static void ShowConsole();

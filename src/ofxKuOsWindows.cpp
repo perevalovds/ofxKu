@@ -11,13 +11,21 @@ void ofxKuOsWindows::SetMainWindowBorderless() {
 	if (hw) {
 		SetWindowLong(hw, GWL_STYLE, WS_POPUP | WS_VISIBLE);
 	}
-	//restore window style
-	//SetWindowLong( hw,GWL_STYLE, WS_POPUP|WS_VISIBLE|WS_SYSMENU|WS_CAPTION|WS_BORDER );
-	//SetActiveWindow(hw);
-
 }
+
 //--------------------------------------------------------------
-//Set size fo position of the current oF window 
+//Restore current oF window border
+void ofxKuOsWindows::RestoreMainWindowBorder() {
+	HWND hw = WindowFromDC(wglGetCurrentDC());
+
+	if (hw) {
+		SetWindowLong(hw, GWL_STYLE, WS_POPUP | WS_VISIBLE | WS_SYSMENU | WS_CAPTION | WS_BORDER);
+		//SetActiveWindow(hw);
+	}
+}
+
+//--------------------------------------------------------------
+//Set size and position of the current oF window 
 void ofxKuOsWindows::SetMainWindowPositionSize(int x, int y, int w, int h) {
 	HWND hw = WindowFromDC(wglGetCurrentDC());
 
