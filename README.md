@@ -1,5 +1,5 @@
 # ofxKu
-Collection of various useful modules for openFrameworks which I used in various projects for a last years.
+Collection of various useful modules for openFrameworks which I used in various projects for the last years.
 
 It contains classes and functions for graphics, image analysis and working with files.
 * Modules are relatively independent. 
