@@ -36,6 +36,20 @@ struct ofxKuMessageLogParams {
 	int capacity = 30;
 };
 
+struct ofxKuMessageLogBigMessage {
+	string message, message_console;	//supported multiline messages, separated by "\n"
+	ofRectangle rect = ofRectangle(0,0,200,200);
+	ofColor color_font = ofColor(255, 255, 0);
+	ofColor color_back = ofColor(64);
+	float duration_sec = 3;
+	float font_size = 20;
+
+	void start();
+	void draw(ofxFontStash &font);
+	//------------------------
+	float time_end_ = -1000;
+};
+
 struct ofxKuMessageLog {
 	void setup(string font_file);
 	void set_parameters(const ofxKuMessageLogParams &params);
@@ -46,6 +60,11 @@ struct ofxKuMessageLog {
 	void log(const string &s, const ofColor &color);
 	void log(const string &s, const string &s_console);	//different messages on the screen and console
 	void log(const string &s, const string &s_console, const ofColor &color);
+	
+	//show "big message" for several seconds, used for showing warnings in the center of screen
+	//supported multiline messages, separated by "\n"
+	void big_message(ofxKuMessageLogBigMessage &big);
+	
 	void draw();
 
 	ofxFontStash font;
@@ -53,6 +72,8 @@ struct ofxKuMessageLog {
 	vector<string> lines;
 	vector<ofColor> colors;
 
+	//big message
+	ofxKuMessageLogBigMessage big_;
 };
 
 
@@ -63,3 +84,4 @@ void MLOG(const string &s, const ofColor &color);
 void MLOG(const string &s, const string &s_console);
 void MLOG(const string &s, const string &s_console, const ofColor &color);
 
+//also see MLOGGER.big_message() for "big message" 

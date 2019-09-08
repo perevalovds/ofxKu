@@ -15,6 +15,7 @@ void ofxKuOsWindows::SetMainWindowBorderless() {
 
 //--------------------------------------------------------------
 //Restore current oF window border
+//NOTE: currently it works bad in oF, because y-coord of mouse is shifted
 void ofxKuOsWindows::RestoreMainWindowBorder() {
 	HWND hw = WindowFromDC(wglGetCurrentDC());
 

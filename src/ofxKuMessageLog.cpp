@@ -65,6 +65,36 @@ void ofxKuMessageLog::log(const string &s, const string &s_console, const ofColo
 	}
 }
 
+//--------------------------------------------------------------
+void ofxKuMessageLog::big_message(ofxKuMessageLogBigMessage &big) {
+	big_ = big;
+	big_.start();
+
+}
+
+
+//--------------------------------------------------------------
+void ofxKuMessageLogBigMessage::start() {
+	MLOG(message, message_console);
+	time_end_ = ofGetElapsedTimef() + duration_sec;
+}
+
+//--------------------------------------------------------------
+void ofxKuMessageLogBigMessage::draw(ofxFontStash &font) {
+	float time = ofGetElapsedTimef();
+	if (time <= time_end_) {
+		ofFill();
+		ofSetColor(color_back);
+		ofRect(rect);
+		ofFill();
+		ofSetColor(color_font);
+		font.setSize(font_size);
+		ofRectangle r = font.getStringBoundingBox(message, 0, 0);
+		ofPoint pos = rect.getCenter() - r.getCenter();
+		font.drawMultiLine(message, font_size, pos.x, pos.y);
+	}
+}
+
 
 //--------------------------------------------------------------
 void ofxKuMessageLog::draw() {
@@ -78,6 +108,10 @@ void ofxKuMessageLog::draw() {
 	}
 	//string s = ofJoinString(lines, "\n");
 	//font.drawMultiLine(s, params.size, params.pos.x, params.pos.y);
+
+	//big message
+	big_.draw(font);
+	
 }
 
 //--------------------------------------------------------------
