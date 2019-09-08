@@ -13,6 +13,16 @@ void MLOG(const string &s, const ofColor &color) {
 }
 
 //--------------------------------------------------------------
+void MLOG(const string &s, const string &s_console) {
+	MLOGGER.log(s, s_console);
+}
+
+//--------------------------------------------------------------
+void MLOG(const string &s, const string &s_console, const ofColor &color) {
+	MLOGGER.log(s, s_console, color);
+}
+
+//--------------------------------------------------------------
 void ofxKuMessageLog::setup(string font_file) {
 	font.setup(font_file, 1.0, 1024, false, 8, 1.5); //1.0, 512, false); // , 8, 1.5);
 	font.setCharacterSpacing(0);
@@ -31,12 +41,22 @@ void ofxKuMessageLog::clear() {
 
 //--------------------------------------------------------------
 void ofxKuMessageLog::log(const string &s) {
-	log(s, params.color);
+	log(s, s, params.color);
 }
 
 //--------------------------------------------------------------
 void ofxKuMessageLog::log(const string &s, const ofColor &color) {
-	cout << s << endl;
+	log(s, s, color);
+}
+
+//--------------------------------------------------------------
+void ofxKuMessageLog::log(const string &s, const string &s_console) {	//different messages on the screen and console
+	log(s, s_console, params.color);
+}
+
+//--------------------------------------------------------------
+void ofxKuMessageLog::log(const string &s, const string &s_console, const ofColor &color) {
+	cout << s_console << endl;
 	lines.push_back(s);
 	colors.push_back(color);
 	if (lines.size() > params.capacity) {
@@ -44,6 +64,7 @@ void ofxKuMessageLog::log(const string &s, const ofColor &color) {
 		colors.erase(colors.begin());
 	}
 }
+
 
 //--------------------------------------------------------------
 void ofxKuMessageLog::draw() {
