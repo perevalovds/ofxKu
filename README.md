@@ -19,12 +19,13 @@ It contains classes and functions for graphics, image analysis and working with 
    * ofSplitString_many - advanced version of ofSplitString, which allows to use many one-char delimiters.
    For example, this funtion allows to parse effectively "a(b,c)" with delimiters "(,)"
 
-## Drawing
+## Graphics
 * ofxKuRectRender class for fast rendering rectangles
 * ofxKuLineRender class for fast rendering lines
 * ofxKuVertexRender class for fast rendering points
 * ofxKuDrawTextureFit(ofTexture &tex, float x, float y, float w, float h) function in ofxKuDrawUtils for fitting texture in rectangle
 * ofxKuDrawRaster draws raster array
+* ofxKuVideoMapping - class for rendering quads using geometry transformation
 
 ## Geometry, meshes and point clouds
 1. ofxKuGeom - geometrical utils
