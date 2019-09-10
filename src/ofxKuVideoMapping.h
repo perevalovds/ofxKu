@@ -1,6 +1,16 @@
 #pragma once
 
 //Videomapping transform for quads
+//---------------------------------------------------
+//Using in your project:
+//1.Copy shader's files mapping.frag,mapping.vert from shaders folder of addon 
+//to data/shaders folder of your project
+//2. in ofApp::setup() call:
+//   MAPPING.setup("shaders/mapping")
+//3. in ofApp::draw() call:
+//   MAPPING.draw_texture(...)
+//---------------------------------------------------
+	
 
 #include "ofMain.h"
 
@@ -16,7 +26,10 @@ struct ofxKuVideoMappingSettings {
 
 struct ofxKuVideoMapping {
 	//Create shader
-	bool setup();	
+	//Copy shader's files mapping.frag,mapping.vert from shaders folder of addon 
+	//to data/shaders folder of your project
+	//and call MAPPING.setup("shaders/mapping")
+	bool setup(const string &file_name);	
 	
 	//Note: color is controlled by alpha, not ofSetColor()
 	bool draw_texture(ofTexture &texture, float w, float h, ofxKuVideoMappingSettings &settings);
