@@ -29,7 +29,7 @@ struct ofxKuVideoMapping {
 	//Copy shader's files mapping.frag,mapping.vert from shaders folder of addon 
 	//to data/shaders folder of your project
 	//and call MAPPING.setup("shaders/mapping")
-	bool setup(const string &file_name);	
+	bool setup(const string &shader_file_name);
 	
 	//Note: color is controlled by alpha, not ofSetColor()
 	bool draw_texture(ofTexture &texture, float w, float h, ofxKuVideoMappingSettings &settings);
