@@ -3,9 +3,9 @@
 ofxKuVideoMapping MAPPING;
 
 //--------------------------------------------------------------
-//Create shader
+//Load shader
 bool ofxKuVideoMapping::setup(const string &shader_file_name) {
-	loaded_ = shader_.load(file_name);
+	loaded_ = shader_.load(shader_file_name);
 	return loaded_;
 }
 
