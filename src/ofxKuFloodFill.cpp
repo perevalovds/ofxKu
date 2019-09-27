@@ -77,57 +77,7 @@ void ofxKuRasterBlobsFilter(vector<unsigned char> &input, vector<unsigned char> 
 }
 
 //--------------------------------------------------------------
-//Find blobs with area in the given range and also sum(field values over blob) in the given range
-void ofxKuBlobDetectInField(vector<int> &field, int w, int h, const ofxKuBlobDetectorParams &params, vector<ofxKuBlob> &blobs) {
-	
-	vector<int> rose = ofxKuRoseOfWinds(params.sv, w);
-
-	//scan
-	vector<unsigned char> mask(w*h, 1);  //TODO here is memory allocation, please declare as static to works faster
-	vector<int> res;
-	for (int Y = 0; Y < h; Y++) {
-		for (int X = 0; X < w; X++) {
-			int I = X + w*Y;
-			if (field[I] > 0 && mask[I]) {
-				mask[I] = 0;
-				int sum = field[I];
-				res.clear();
-				res.push_back(I);
-
-				size_t begin = 0;
-				while (begin < res.size()) {
-					int p = res[begin];
-					begin++;
-					for (int i = 0; i<params.sv; i++) {
-						int q = p + rose[i];
-						int x = q % w;
-						int y = q / w;
-						if (x >= 0 && x < w && y >= 0 && y < h && field[q] > 0 && mask[q]) {
-							res.push_back(q);
-							mask[q] = 0;
-							sum += field[q];
-						}
-					}
-				}
-				if ((res.size() >= params.min_blob_area || params.min_blob_area == -1)
-					&& (res.size() <= params.max_blob_area || params.max_blob_area == -1)
-					&& (sum >= params.min_count_in_blob || params.min_count_in_blob == -1)
-					&& (sum <= params.max_count_in_blob || params.max_count_in_blob == -1)
-					) {
-					blobs.push_back(ofxKuBlob());
-					ofxKuBlob &blob = blobs[blobs.size() - 1];
-					blob.w = w;
-					blob.h = h;
-					blob.pnt = res;
-					blob.Sum = sum;
-				}
-			}
-		}
-	}
-
-}
-
-
+//--------------------------------------------------------------
 //--------------------------------------------------------------
 ofPoint ofxKuBlob::center_mass() {
 	double X = 0;
@@ -142,6 +92,26 @@ ofPoint ofxKuBlob::center_mass() {
 		Y /= n;
 	}
 	return ofPoint(X, Y);
+}
+
+//--------------------------------------------------------------
+ofRectangle ofxKuBlob::bbox() {	//boundary box
+	if (pnt.empty()) {
+		return ofRectangle(0, 0, -1, -1);
+	}
+	int x0 = pnt[0] % w;
+	int y0 = pnt[0] / w;
+	int x1 = x0;
+	int y1 = y0;
+	for (int i = 0; i < pnt.size(); i++) {
+		int x = pnt[i] % w;
+		int y = pnt[i] / w;
+		x0 = min(x0, x);
+		y0 = min(y0, y);
+		x1 = max(x1, x);
+		y1 = max(y1, y);
+	}
+	return ofRectangle(x0, y0, x1 + 1 - x0, y1 + 1 - y0);
 }
 
 //--------------------------------------------------------------
