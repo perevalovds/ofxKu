@@ -47,11 +47,10 @@ string ofxKuFileReadString(string file_name, bool use_data_path) {
 }
 
 //--------------------------------------------------------------------------------
-bool ofxKuFileWriteStrings( const vector<string> &list, string fileName, bool use_data_path)
-{
+bool ofxKuFileWriteStrings( const vector<string> &list, string fileName, bool use_data_path, bool append) {
 	if (use_data_path) fileName = ofToDataPath(fileName);
 
-	ofstream f(fileName.c_str(),ios::out);
+	ofstream f(fileName.c_str(),ios::out | ((append)?ios::app : 0));
 	for ( int i=0; i<list.size(); i++ ) {
 		f << list[i] << endl;
 	}
@@ -59,10 +58,10 @@ bool ofxKuFileWriteStrings( const vector<string> &list, string fileName, bool us
 }
 
 //--------------------------------------------------------------------------------
-bool ofxKuFileWriteString(const string &line, string fileName, bool use_data_path) {
+bool ofxKuFileWriteString(const string &line, string fileName, bool use_data_path, bool append) {
 	vector<string> file;
 	file.push_back(line);
-	return ofxKuFileWriteStrings(file, fileName, use_data_path);
+	return ofxKuFileWriteStrings(file, fileName, use_data_path, append);
 }
 
 //--------------------------------------------------------------------------------

@@ -11,8 +11,8 @@ int ofxKuFileSize( string fileName, bool use_data_path = true);
 vector<string> ofxKuFileReadStrings( string fileName, bool use_data_path = true);
 string ofxKuFileReadString(string file_name, bool use_data_path = true);
 
-bool ofxKuFileWriteStrings( const vector<string> &list, string fileName, bool use_data_path = true);
-bool ofxKuFileWriteString(const string &line, string fileName, bool use_data_path = true);
+bool ofxKuFileWriteStrings( const vector<string> &list, string fileName, bool use_data_path = true, bool append = false);
+bool ofxKuFileWriteString(const string &line, string fileName, bool use_data_path = true, bool append = false);
 
 
 
