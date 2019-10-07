@@ -1,8 +1,9 @@
 #pragma once
 
-//Here is Windows-specific functions for controlling 
-//OpenGL windows (make borderless, set position and size for borderless fullscreen) 
-//and console window(hide, show).
+//Here is the following Windows-specific functions:
+//- controlling OpenGL windows (make borderless, set position and size for borderless fullscreen) 
+//- console window(hide, show),
+//- screen grabber (GDI method)
 
 #include "ofMain.h"
 
@@ -26,5 +27,17 @@ struct ofxKuOsWindows {
 	static void HideConsole();
 
 
+};
+
+
+//Screen grabber
+struct ofxKuOsWindowsScreenGrabber {
+	bool setup(int w, int h);
+	bool grab(int x, int y);
+
+	int w = 0;
+	int h = 0;
+
+	ofPixels pixels;
 };
 

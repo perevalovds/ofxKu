@@ -85,8 +85,12 @@ also can be linked with ofxKuTextGui GUI system.
 * ofxArgs - addon for working with command line arguments, by Pat Long
 
 ## OS-specific
-* ofxKuOsWindows contains Windows-specific functions for controlling OpenGL windows (make borderless, set position and size for borderless fullscreen) 
-and console window (hide,show).
+
+ofxKuOsWindows contains the following Windows-specific functions:
+
+* Controlling OpenGL windows (make borderless, set position and size for borderless fullscreen) 
+* Controlling console window (hide,show)
+* Grab screen (GID method)
 
 ## Logging
 * ofxKuMessageLog - class for output logs on the screen. Note: requires ofxFontStash addon for drawing text on the screen.
