@@ -90,7 +90,7 @@ ofxKuOsWindows contains the following Windows-specific functions:
 
 * Controlling OpenGL windows (make borderless, set position and size for borderless fullscreen) 
 * Controlling console window (hide,show)
-* Grab screen (GID method)
+* Grab screen (GDI method)
 
 ## Logging
 * ofxKuMessageLog - class for output logs on the screen. Note: requires ofxFontStash addon for drawing text on the screen.
