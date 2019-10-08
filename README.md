@@ -90,6 +90,7 @@ ofxKuOsWindows contains the following Windows-specific functions:
 
 * Controlling OpenGL windows (make borderless, set position and size for borderless fullscreen) 
 * Controlling console window (hide,show)
+* Mouse move and click emulation
 * Grab screen (GDI method)
 
 ## Logging

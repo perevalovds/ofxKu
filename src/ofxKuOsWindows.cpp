@@ -50,6 +50,39 @@ void ofxKuOsWindows::HideConsole() {
 }
 
 //--------------------------------------------------------------
+//Mouse move and click emulation
+//NOTE: it's old Windows-API method
+void ofxKuOsWindows::MouseExec(int screen_x, int screen_y, bool leftClick, bool rightClick) {
+
+	int x = (screen_x * 65535 / GetSystemMetrics(SM_CXSCREEN));
+	int y = (screen_y * 65535 / GetSystemMetrics(SM_CYSCREEN));
+	//screen for this commans has size 65535,65535
+
+	INPUT inp[3];
+	memset(inp, 0, sizeof(inp));
+
+	inp[0].type = INPUT_MOUSE;
+	inp[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE; // движение мышки
+	inp[0].mi.dx = x;
+	inp[0].mi.dy = y;
+
+	bool click = (leftClick || rightClick);
+	if (click) {
+		inp[1].type = INPUT_MOUSE;
+		inp[1].mi.dwFlags = (leftClick) ?
+			MOUSEEVENTF_LEFTDOWN : MOUSEEVENTF_RIGHTDOWN;
+
+		inp[2].type = INPUT_MOUSE;
+		inp[2].mi.dwFlags = (leftClick) ?
+			MOUSEEVENTF_LEFTUP : MOUSEEVENTF_RIGHTUP;  // отпускание правой кнопки
+	}
+
+	int count = (click) ? 3 : 1;
+	SendInput(count, inp, sizeof(INPUT));
+
+}
+
+//--------------------------------------------------------------
 //Screen grabber
 
 HDC hdcScr = 0;
@@ -201,15 +234,11 @@ int CaptureBMP(int grabX, int grabY, int grabW, int grabH, unsigned char *outDat
 }
 
 //--------------------------------------------------------------
-bool ofxKuOsWindowsScreenGrabber::setup(int w, int h) {
-	this->w = w;
-	this->h = h;
-	pixels.allocate(w, h, 4);
-	return true;
-}
+bool ofxKuOsWindowsScreenGrabber::grab(int x, int y, int w, int h) {
+	if (pixels.getWidth() != w || pixels.getHeight() != h) {
+		pixels.allocate(w, h, 4);
+	}
 
-//--------------------------------------------------------------
-bool ofxKuOsWindowsScreenGrabber::grab(int x, int y) {
 	int res = CaptureBMP(x, y, w, h, pixels.getPixels());
 
 	if (res) {
