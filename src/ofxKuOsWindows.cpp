@@ -103,7 +103,7 @@ int CaptureBMP(int grabX, int grabY, int grabW, int grabH, unsigned char *outDat
 	// memory DC keeps a copy of this "snapshot" in the associated
 	// bitmap.
 	if (!hdcScr) {
-		hdcScr = CreateDC(L"DISPLAY", NULL, NULL, NULL);		//как вариант - CreateCompatibleDC(0);
+		hdcScr = CreateDC(_T("DISPLAY"), NULL, NULL, NULL);		//как вариант - CreateCompatibleDC(0);
 		hdcMem = CreateCompatibleDC(hdcScr);
 	}
 
