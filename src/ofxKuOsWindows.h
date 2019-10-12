@@ -4,14 +4,10 @@
 //- controlling OpenGL windows (make borderless, set position and size for borderless fullscreen) 
 //- console window(hide, show),
 //- mouse move and click emulation
+//- sending keyboard hit to a window, found by window class name(see windows / winlister for getting window class).
 //- screen grabber (GDI method)
 
 #include "ofMain.h"
-
-//Class for the following:
-//Borderless fullscreen
-//Hide/show console window
-//Mouse move and click emulation
 
 struct ofxKuOsWindows {
 	//Functions for borderless fullscreen emulation
@@ -35,6 +31,9 @@ struct ofxKuOsWindows {
 	//Mouse move and click emulation
 	static void MouseExec(int screen_x, int screen_y, bool leftClick, bool rightClick);
 
+	//Send keyboard to a window with given class name
+	//To search windows class use WinLister in 'windows/winlister' folder of the addon
+	static bool SendKeyboard_by_class(string window_title, int key);
 };
 
 
