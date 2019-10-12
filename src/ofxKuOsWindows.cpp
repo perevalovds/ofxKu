@@ -89,7 +89,7 @@ bool ofxKuOsWindows::SendKeyboard_by_class(string window_class, int key) {
 	//https://batchloaf.wordpress.com/2012/04/17/simulating-a-keystroke-in-win32-c-or-c-using-sendinput/
 
 	HWND window_handle;
-	window_class = "UnrealWindow";
+	//window_class = "UnrealWindow";
 
 	//To search windows class use WinLister in 'windows' addon's folder
 
