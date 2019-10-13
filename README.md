@@ -86,13 +86,7 @@ also can be linked with ofxKuTextGui GUI system.
 
 ## OS-specific
 
-ofxKuOsWindows contains the following Windows-specific functions:
-
-* Controlling OpenGL windows (make borderless, set position and size for borderless fullscreen) 
-* Controlling console window (hide,show)
-* Mouse move and click emulation
-* Sending keyboard hit to a window, found by window class name(see windows / winlister for getting window class).
-* Grab screen (GDI method)
+Windows-related stuff is moved into separate addon "ofxWindows"
 
 ## Logging
 * ofxKuMessageLog - class for output logs on the screen. Note: requires ofxFontStash addon for drawing text on the screen.

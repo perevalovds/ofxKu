@@ -19,7 +19,7 @@ meta:
 	ADDON_DESCRIPTION = Collection of various useful modules for openFrameworks which I used in various projects for the last years.
 	ADDON_AUTHOR = Denis Perevalov
 	ADDON_TAGS = "Utilities"
-	ADDON_URL = https://github.com/perevalovds/ofxUniversalMedia.git
+	ADDON_URL = https://github.com/perevalovds/ofxKu.git
 
 common:
 	# dependencies with other addons, a list of them separated by spaces
