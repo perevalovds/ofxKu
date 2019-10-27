@@ -6,8 +6,8 @@
 
 #include <string>
 
-unsigned int ofxKuHashCrc32(void *buffer, unsigned long len);
+unsigned int ofxKuUtilsCrc32(void *buffer, unsigned long len);
 
 //Note: function reads the whole file
 //TODO read by blocks - for big files
-unsigned int ofxKuHashCrc32(const std::string &file_name, bool use_data_path = true);
+unsigned int ofxKuUtilsCrc32(const std::string &file_name, bool use_data_path = true);

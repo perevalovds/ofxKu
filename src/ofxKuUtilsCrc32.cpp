@@ -1,8 +1,8 @@
-#include "ofxKuHashCrc32.h"
+#include "ofxKuUtilsCrc32.h"
 #include "ofxKuFile.h"
 
 //--------------------------------------------------------------
-unsigned int ofxKuHashCrc32(void *buffer, unsigned long len)
+unsigned int ofxKuUtilsCrc32(void *buffer, unsigned long len)
 {
 	unsigned long crc_table[256];
 	unsigned long crc;
@@ -22,7 +22,7 @@ unsigned int ofxKuHashCrc32(void *buffer, unsigned long len)
 }
 
 //--------------------------------------------------------------
-unsigned int ofxKuHashCrc32(const std::string &file_name, bool use_data_path) {
+unsigned int ofxKuUtilsCrc32(const std::string &file_name, bool use_data_path) {
 	unsigned long len = ofxKuFileSize(file_name, use_data_path);
 	vector<char> buffer(len);
 	if (len > 0) {
@@ -32,7 +32,7 @@ unsigned int ofxKuHashCrc32(const std::string &file_name, bool use_data_path) {
 		f.read(&buffer[0], len);
 	}
 	//f.gcount() - number of bytes
-	return ofxKuHashCrc32(&buffer[0], len);
+	return ofxKuUtilsCrc32(&buffer[0], len);
 }
 
 //--------------------------------------------------------------

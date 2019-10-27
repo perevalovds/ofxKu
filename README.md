@@ -10,7 +10,7 @@ It contains classes and functions for graphics, image analysis and working with 
 
 ## Compression and hash
   ofxKuCompress - RLE and bit compression
-  ofxKuHashCrc32 - computing CRC32 hash
+  ofxKuUtilsCrc32 - computing CRC32 hash
   ofxKuUtilsBase64 - encoding and decoding base64 (code is based on https://github.com/ReneNyffenegger/cpp-base64  by Rene Nyffenegger)
   
 ## Strings
