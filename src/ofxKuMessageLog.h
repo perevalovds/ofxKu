@@ -1,11 +1,14 @@
 #pragma once
 
-//Messages on the screen
-//Required ofxFontStash addon for output on the screen
-//MLOGGER - global object
-//MLOG - function for adding new message
+/*Messages on the screen
+Required ofxFontStash addon for output on the screen
+MLOGGER - global object
+MLOG - function for adding new message
 
-/*Example usage
+IMPORTANT NOTE: To see non-latin symbols, 
+you must encode your ofApp and other source files in UTF8
+
+Example of usage:
 
 //Setup
 ofxKuMessageLogParams prm;
