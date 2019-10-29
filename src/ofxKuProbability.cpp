@@ -7,6 +7,29 @@ ofxKuProbability::ofxKuProbability() {
 }
 
 //--------------------------------------------------------------
+//Setup by adding pairs (weight, value), weights: weight>0, and are relative, not expected their sum is 1
+void ofxKuProbability::add_value(float value, float weight) {
+	use_pairs = true;
+	pairs_dirty = true;
+	values_.push_back(value);
+	weights_.push_back(weight);
+}
+
+//--------------------------------------------------------------
+float ofxKuProbability::generate_value() {	//generate from pairs
+	if (pairs_dirty) {
+		setup(weights_);
+		pairs_dirty = false;
+	}
+	int i = generate_index();
+	if (i >= 0 && i < values_.size()) {
+		return values_[i];
+	}
+	return 0;	//TODO warning
+}
+
+
+//--------------------------------------------------------------
 //Setup from density array, density can be unnormalized
 void ofxKuProbability::setup(const vector<float> &density) {
 	prob_ = density;
@@ -47,11 +70,11 @@ int ofxKuProbability::generate_index() {
 	int n = prob_.size();
 	int I = 0;
 	for (int i = 0; i < n; i++) {
+		sum += prob_[i];
 		if (p <= sum) {
 			I = i;
 			break;
 		}
-		sum += prob_[i];
 	}
 	return I;
 }

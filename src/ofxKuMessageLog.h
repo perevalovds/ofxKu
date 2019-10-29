@@ -5,8 +5,9 @@ Required ofxFontStash addon for output on the screen
 MLOGGER - global object
 MLOG - function for adding new message
 
-IMPORTANT NOTE: To see non-latin symbols, 
-you must encode your ofApp and other source files in UTF8
+IMPORTANT NOTE: To see non-latin symbols, do the following:
+1) Convert your ofApp and other h/cpp source files to UTF8 (in Windows - use Notepad++),
+2) If you are using Visual Studio, set Project Settings - General - Character Set to "Use Unicode Character Set"
 
 Example of usage:
 
