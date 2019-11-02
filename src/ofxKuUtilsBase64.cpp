@@ -30,6 +30,22 @@ Original text:
 
 
 //--------------------------------------------------------------
+//wikipedia: url_safe '+/' -> '-_'.
+std::string ofxKuUtilsBase64::to_url_safe(std::string const& s) {
+	string str = s;
+	ofStringReplace(str, "+", "-");
+	ofStringReplace(str, "/", "_");
+	return str;
+}
+
+std::string ofxKuUtilsBase64::from_url_safe(std::string const& s) {
+	string str = s;
+	ofStringReplace(str, "-", "+");
+	ofStringReplace(str, "_", "/");
+	return str;
+}
+
+//--------------------------------------------------------------
 std::string ofxKuUtilsBase64::encode(unsigned char const* bytes_to_encode, unsigned int in_len) {
 	std::string ret;
 	int i = 0;
