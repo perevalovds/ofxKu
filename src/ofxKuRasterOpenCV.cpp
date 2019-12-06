@@ -158,6 +158,10 @@ void ofxKuOpticalFlowFarneback(ofPixels &pix_gray1, ofPixels &pix_gray2, float s
 	ofxCvGrayscaleImage gray1_, gray2_;
 	gray1_.setUseTexture(false);
 	gray2_.setUseTexture(false);
+	int ww = pix_gray1.getWidth();
+	int hh = pix_gray1.getHeight();
+	gray1_.allocate(ww, hh);
+	gray2_.allocate(ww, hh);
 	gray1_.setFromPixels(pix_gray1);
 	gray2_.setFromPixels(pix_gray2);
 
