@@ -59,7 +59,13 @@ void ofxKuMessageLog::log(const string &s, const string &s_console, const ofColo
 	cout << s_console << endl;
 	lines.push_back(s);
 	colors.push_back(color);
-	if (lines.size() > params.capacity) {
+
+	remove_old_lines();
+}
+
+//--------------------------------------------------------------
+void ofxKuMessageLog::remove_old_lines() {	//remove lines is lines.size exceeds capacity
+	while (lines.size() > params.capacity) {
 		lines.erase(lines.begin());
 		colors.erase(colors.begin());
 	}
@@ -95,12 +101,30 @@ void ofxKuMessageLogBigMessage::draw(ofxFontStash &font) {
 	}
 }
 
+//--------------------------------------------------------------
+void ofxKuMessageLog::draw(float x, float y, float h, float font_size) {	//recomputes capacity using h
+	//update new capacity
+	params.fit_capacity(h);
+	remove_old_lines();
+
+	ofFill();	//required for using ofxFontStash
+
+	for (int i = 0; i < lines.size(); i++) {
+		ofSetColor(colors[i]);
+		font.draw(lines[i], font_size, x, y + i * params.font_size);
+	}
+	//string s = ofJoinString(lines, "\n");
+	//font.drawMultiLine(s, params.size, params.pos.x, params.pos.y);
+
+	//big message
+	big_.draw(font);
+}
 
 //--------------------------------------------------------------
-void ofxKuMessageLog::draw() {
+void ofxKuMessageLog::draw() { //uses params.capacity
 	//ofSetColor(params.color);
 	//font.draw("Три", 30, x, y);
-	ofFill();	//required for using font stash
+	ofFill();	//required for using ofxFontStash
 	ofPoint &pos = params.pos;
 	for (int i = 0; i < lines.size(); i++) {
 		ofSetColor(colors[i]);

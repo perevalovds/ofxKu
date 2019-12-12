@@ -12,10 +12,9 @@ IMPORTANT NOTE: To see non-latin symbols, do the following:
 Example of usage:
 
 //Setup
-ofxKuMessageLogParams prm;
-prm.pos = ofPoint(20, 500);
-prm.size = 25;
 MLOGGER.setup("fonts/Arial Unicode.ttf");
+ofxKuMessageLogParams prm;
+prm.color = ofColor(140);
 MLOGGER.set_parameters(prm);
 
 //Add new message
@@ -25,7 +24,8 @@ MLOG("Error", ofColor(255,0,0)); //message with custom color
 MLOG("Задача завершена", "Task is completed", ofColor(255,0,0));
 
 //Draw
-MLOGGER.draw();
+float font_size = 25;
+MLOGGER.draw(20, 20, ofGetHeight()-40, font_size);
 */
 
 
@@ -38,6 +38,10 @@ struct ofxKuMessageLogParams {
 	ofPoint pos = ofPoint(300, 20);
 
 	int capacity = 30;
+
+	void fit_capacity(float h) {
+		capacity = int(h / font_size);
+	}
 };
 
 struct ofxKuMessageLogBigMessage {
@@ -69,7 +73,13 @@ struct ofxKuMessageLog {
 	//supported multiline messages, separated by "\n"
 	void big_message(ofxKuMessageLogBigMessage &big);
 	
+	//use it then you don't want to care of pos and capacity, and it will be computed automatically
+	void draw(float x, float y, float h, float font_size = 20);	
+
+	//DEPRECATED
+	//use it when you have desired pos and capacity and font_size and set it in set_parameters
 	void draw();
+
 
 	ofxFontStash font;
 	ofxKuMessageLogParams params;
@@ -78,6 +88,9 @@ struct ofxKuMessageLog {
 
 	//big message
 	ofxKuMessageLogBigMessage big_;
+
+protected:
+	void remove_old_lines();	//remove lines is lines.size exceeds capacity
 };
 
 
