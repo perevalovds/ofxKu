@@ -39,7 +39,7 @@ struct ofxKuMessageLogParams {
 
 	int capacity = 30;
 
-	void fit_capacity(float h) {
+	void fit_capacity(float h, float font_size) {
 		capacity = int(h / font_size);
 	}
 };

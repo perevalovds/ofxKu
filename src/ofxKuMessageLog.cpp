@@ -104,14 +104,14 @@ void ofxKuMessageLogBigMessage::draw(ofxFontStash &font) {
 //--------------------------------------------------------------
 void ofxKuMessageLog::draw(float x, float y, float h, float font_size) {	//recomputes capacity using h
 	//update new capacity
-	params.fit_capacity(h);
+	params.fit_capacity(h, font_size);
 	remove_old_lines();
 
 	ofFill();	//required for using ofxFontStash
 
 	for (int i = 0; i < lines.size(); i++) {
 		ofSetColor(colors[i]);
-		font.draw(lines[i], font_size, x, y + i * params.font_size);
+		font.draw(lines[i], font_size, x, y + i * font_size);
 	}
 	//string s = ofJoinString(lines, "\n");
 	//font.drawMultiLine(s, params.size, params.pos.x, params.pos.y);
