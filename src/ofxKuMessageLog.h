@@ -59,6 +59,9 @@ struct ofxKuMessageLogBigMessage {
 };
 
 struct ofxKuMessageLog {
+	void disable() { disabled_ = true; }	//if disabled, the all calls ignored - used for windowless mode
+	bool disabled() { return disabled_; }
+
 	void setup(string font_file);
 	void set_parameters(const ofxKuMessageLogParams &params);
 	
@@ -89,8 +92,11 @@ struct ofxKuMessageLog {
 	//big message
 	ofxKuMessageLogBigMessage big_;
 
+
 protected:
 	void remove_old_lines();	//remove lines is lines.size exceeds capacity
+
+	bool disabled_ = false;
 };
 
 
