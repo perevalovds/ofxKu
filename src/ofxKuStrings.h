@@ -18,6 +18,7 @@ std::vector<std::string> ofToVectorString(const std::vector<T>& values) {
 
 std::vector<int> ofToVectorInt(const std::vector<string>& values);
 std::vector<float> ofToVectorFloat(const std::vector<string>& values);
+std::vector<double> ofToVectorDouble(const std::vector<string>& values);
 
 //Convert ofPoint to string and back
 std::string ofToString(const ofPoint &p, const std::string &separator);
