@@ -22,6 +22,16 @@ std::vector<float> ofToVectorFloat(const std::vector<string>& values) {
 }
 
 //--------------------------------------------------------------
+std::vector<double> ofToVectorDouble(const std::vector<string>& values) {
+	int n = values.size();
+	std::vector<double> out(n);
+	for (int i = 0; i < n; i++) {
+		out[i] = ofToDouble(values[i]);
+	}
+	return out;
+}
+
+//--------------------------------------------------------------
 std::string ofToString(const ofPoint &p, const std::string &separator) {
 	return ofToString(p.x) + separator + ofToString(p.y) + separator + ofToString(p.z);
 }
