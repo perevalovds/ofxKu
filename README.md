@@ -30,6 +30,12 @@ It contains classes and functions for graphics, image analysis and working with 
 
 ## Geometry, meshes and point clouds
 1. ofxKuGeom - geometrical utils
+    * Structure ofxKuGeomLine2D for working with line in 2D: 
+      * compute line equation,
+      * compute signed distance from a line, 
+      * project point on line, 
+      * mirror point of line.
+
    * Point clouds:
       * minimal distance between two point sets
    * Polygons:

@@ -1,5 +1,44 @@
 #include "ofxKuGeom.h"
 
+//--------------------------------------------------------
+ofxKuGeomLine2D::ofxKuGeomLine2D(const ofPoint &p0, const ofPoint &p1) {
+	setup(p0, p1);
+}
+
+//--------------------------------------------------------
+void ofxKuGeomLine2D::setup(const ofPoint &p0, const ofPoint &p1) {
+	this->p0 = p0; this->p1 = p1;
+	a = p1.y - p0.y;
+	b = p0.x - p1.x;
+	//normalize
+	float len = a * a + b * b;
+	if (len > 0) {
+		len = sqrt(len);
+		a /= len;
+		b /= len;
+	}
+	c = -a * p0.x - b * p0.y;
+}
+
+//--------------------------------------------------------
+//signed distance
+float ofxKuGeomLine2D::sgd(const ofPoint &p) {
+	return p.x * a + p.y * b + c;
+}
+
+//--------------------------------------------------------
+ofPoint ofxKuGeomLine2D::project(const ofPoint &p) {	//project point onto line
+	float t = sgd(p);
+	return p - ofPoint(a, b)*t;
+}
+
+//--------------------------------------------------------
+ofPoint ofxKuGeomLine2D::mirror(const ofPoint &p) {	//mirror
+	float t = sgd(p);
+	return p - ofPoint(a, b)*(2*t);
+}
+
+//--------------------------------------------------------
 
 //--------------------------------------------------------
 //Minimal distance between two point sets
