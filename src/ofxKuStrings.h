@@ -7,8 +7,17 @@
 //Convert vector<string> to vector<int>, vector<float> and back
 
 template<class T>
-std::vector<std::string> ofToVectorString(const std::vector<T>& values) {
-	int n = values.size();
+std::vector<std::string> ofToVectorString(const std::vector<T>& values, int from = 0, int n = -1) {
+	if (n == -1) n = values.size();
+	std::vector<std::string> out(n);
+	for (int i = 0; i < n; i++) {
+		out[i] = ofToString(values[i + from]);
+	}
+	return out;
+}
+
+template<class T>
+std::vector<std::string> ofToVectorString(const T *values, int n) {
 	std::vector<std::string> out(n);
 	for (int i = 0; i < n; i++) {
 		out[i] = ofToString(values[i]);
