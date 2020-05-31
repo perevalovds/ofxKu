@@ -51,15 +51,24 @@ struct ofxKuBlobDetectorParams {
 //-------------------------------------------------------------------------------------
 //Find blobs with area in the given range and also sum(field values over blob) in the given range
 //T - an integer type, such as unsigned char or int
+//roix,y,w,h - if specified, only this area is used for blob search
 template <typename T>
-void ofxKuBlobDetectInField(vector<T> &field, int w, int h, const ofxKuBlobDetectorParams &params, vector<ofxKuBlob> &blobs) {
+void ofxKuBlobDetectInField(vector<T> &field, int w, int h, const ofxKuBlobDetectorParams &params, vector<ofxKuBlob> &blobs,
+	int roix = -1, int roiy = -1, int roiw = -1, int roih = -1) {
 	vector<int> rose = ofxKuRoseOfWinds(params.sv, w);
+
+	if (roix == -1) {
+		roix = 0;
+		roiy = 0;
+		roiw = roix+w;	//We are using this trick to not to use "+" below.
+		roih = roiy+h;
+	}
 
 	//scan
 	vector<unsigned char> mask(w*h, 1);  //TODO here is memory allocation, please declare as static to works faster
 	vector<int> res;
-	for (int Y = 0; Y < h; Y++) {
-		for (int X = 0; X < w; X++) {
+	for (int Y = roiy; Y < roih; Y++) {
+		for (int X = roix; X < roiw; X++) {
 			int I = X + w * Y;
 			if (field[I] > 0 && mask[I]) {
 				mask[I] = 0;
@@ -75,7 +84,7 @@ void ofxKuBlobDetectInField(vector<T> &field, int w, int h, const ofxKuBlobDetec
 						int q = p + rose[i];
 						int x = q % w;
 						int y = q / w;
-						if (x >= 0 && x < w && y >= 0 && y < h && field[q] > 0 && mask[q]) {
+						if (x >= roix && x < roiw && y >= roiy && y < roih && field[q] > 0 && mask[q]) {
 							res.push_back(q);
 							mask[q] = 0;
 							sum += field[q];
