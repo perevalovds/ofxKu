@@ -60,9 +60,11 @@ void ofxKuBlobDetectInField(vector<T> &field, int w, int h, const ofxKuBlobDetec
 	if (roix == -1) {
 		roix = 0;
 		roiy = 0;
-		roiw = roix+w;	//We are using this trick to not to use "+" below.
-		roih = roiy+h;
+		roiw = w;
+		roih = h;
 	}
+	roiw = roix + roiw;	//We are using this trick to not to use "+" below.
+	roih = roiy + roih;
 
 	//scan
 	vector<unsigned char> mask(w*h, 1);  //TODO here is memory allocation, please declare as static to works faster
