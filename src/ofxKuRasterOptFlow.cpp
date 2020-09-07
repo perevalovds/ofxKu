@@ -6,8 +6,10 @@
 ofxKuRasterOptFlow::ofxKuRasterOptFlow() {
 	w_ = 100;
 	h_ = 100;
-	blur_input = 3;
-	blur_data = 7;
+	blur_input = 3;		//Parameter may change online
+	blur_data = 7;      //Parameter may change online
+	enl_ = 7;
+
 	eps_count = 0.05;
 }
 
@@ -28,51 +30,62 @@ void ofxKuRasterOptFlow::setup(int w, int h) {
 }
 
 //-------------------------------------------------------------------------------
-void ofxKuRasterOptFlow::update( vector<unsigned char> mask0, int w0, int h0) {
-	if (mask2_.size() == w_*h_) {
+void ofxKuRasterOptFlow::update( const vector<unsigned char> &mask0, int w0, int h0) {
+	int enlarge = max(blur_input, blur_data);
+	if (enlarge != enl_) {
+		mask2_.clear();
+	}
+	enl_ = enlarge;
+
+	ofxKuRasterResize_nearest(mask0, w0, h0, mask_temp0_, w_, h_);
+	int w, h;
+	raster_enlarge(mask_temp0_, w_, h_, enl_, mask_temp_, w, h);
+
+	//previous frame
+	if (mask2_.size() == w*h) {
 		mask1Z_ = mask2Z_;
 		mask1_ = mask2_;
 	}
 	
 	//resize, threshold and blur input mask	
-	ofxKuRasterResize_nearest(mask0,w0,h0,mask_temp_,w_,h_);
-	ofxKuRasterBlur_float(mask_temp_,w_,h_,blur_input,mask2Z_);				//blurred version for Z-optical flow	
-	ofxKuRasterThreshold(mask_temp_, mask_temp_, w_, h_, 0.0f, 0.0f, 1.0f);
-	ofxKuRasterBlur_float(mask_temp_,w_,h_,blur_input,mask2_);				//blurred thresholded for 2D binary optical flow
+	ofxKuRasterBlur_float(mask_temp_,w, h, blur_input,mask2Z_);				//blurred version for Z-optical flow	
+	ofxKuRasterThreshold(mask_temp_, mask_temp_, w, h, 0.0f, 0.0f, 1.0f);
+	ofxKuRasterBlur_float(mask_temp_,w,h,blur_input,mask2_);				//blurred thresholded for 2D binary optical flow
 
-	if (mask1_.size()!=w_*h_ || mask2_.size()!=w_*h_) {
+	if (mask1_.size()!=w*h || mask2_.size()!=w*h) {
+		//wait next frame
 		return;
 	}
 
 	//moves
-	vector<float> X( w_ * h_ );
-	vector<float> Y( w_ * h_ );
-	for (int y=0; y<h_; y++) {
-		for (int x=0; x<w_; x++) {
-			X[ x + w_ * y ] = x;
-			Y[ x + w_ * y ] = y;
+	vector<float> X( w * h );
+	vector<float> Y( w * h );
+	for (int y=0; y<h; y++) {
+		for (int x=0; x<w; x++) {
+			X[ x + w * y ] = x;
+			Y[ x + w * y ] = y;
 		}
 	}
 
 	//multiply
 	vector<float> X1,Y1,X2,Y2;
-	ofxKuRasterMultiply(X, mask1_, X1, w_, h_);
-	ofxKuRasterMultiply(Y, mask1_, Y1, w_, h_);
-	ofxKuRasterMultiply(X, mask2_, X2, w_, h_);
-	ofxKuRasterMultiply(Y, mask2_, Y2, w_, h_);
+	ofxKuRasterMultiply(X, mask1_, X1, w, h);		//TODO can use from previous frame!
+	ofxKuRasterMultiply(Y, mask1_, Y1, w, h);
+	ofxKuRasterMultiply(X, mask2_, X2, w, h);
+	ofxKuRasterMultiply(Y, mask2_, Y2, w, h);
 
 	//blur
 	vector<float> X1b,Y1b,X2b,Y2b,mask1b,mask2b;
-	ofxKuRasterBlur_float(X1,w_,h_,blur_data,X1b);
-	ofxKuRasterBlur_float(Y1,w_,h_,blur_data,Y1b);
-	ofxKuRasterBlur_float(X2,w_,h_,blur_data,X2b);
-	ofxKuRasterBlur_float(Y2,w_,h_,blur_data,Y2b);
-	ofxKuRasterBlur_float(mask1_,w_,h_,blur_data,mask1b);
-	ofxKuRasterBlur_float(mask2_,w_,h_,blur_data,mask2b);
+	ofxKuRasterBlur_float(X1,w,h,blur_data,X1b);
+	ofxKuRasterBlur_float(Y1,w,h,blur_data,Y1b);
+	ofxKuRasterBlur_float(X2,w,h,blur_data,X2b);
+	ofxKuRasterBlur_float(Y2,w,h,blur_data,Y2b);
+	ofxKuRasterBlur_float(mask1_,w,h,blur_data,mask1b);
+	ofxKuRasterBlur_float(mask2_,w,h,blur_data,mask2b);
 
 	//clean bad zones
 	//vector<int> zone(w_ * h_,1);
-	for (int i=0; i<w_*h_; i++) {
+	for (int i=0; i<w*h; i++) {
 		if (mask1b[i] <= eps_count || mask2b[i] < eps_count) {
 			X1b[i] = Y1b[i] = X2b[i] = Y2b[i] = 0;
 			//zone[i] = 0;
@@ -80,17 +93,22 @@ void ofxKuRasterOptFlow::update( vector<unsigned char> mask0, int w0, int h0) {
 	}
 
 	//divide
-	ofxKuRasterDivide(X1b,mask1b,X1,w_,h_,eps_count,0.0f);
-	ofxKuRasterDivide(Y1b,mask1b,Y1,w_,h_,eps_count,0.0f);
-	ofxKuRasterDivide(X2b,mask2b,X2,w_,h_,eps_count,0.0f);
-	ofxKuRasterDivide(Y2b,mask2b,Y2,w_,h_,eps_count,0.0f);
+	ofxKuRasterDivide(X1b,mask1b,X1,w,h,eps_count,0.0f);	//TODO can here already crop...
+	ofxKuRasterDivide(Y1b,mask1b,Y1,w,h,eps_count,0.0f);
+	ofxKuRasterDivide(X2b,mask2b,X2,w,h,eps_count,0.0f);
+	ofxKuRasterDivide(Y2b,mask2b,Y2,w,h,eps_count,0.0f);
 
 	//find 2D binary mask flow
-	ofxKuRasterSubtract(X2,X1,flowX_,w_,h_);
-	ofxKuRasterSubtract(Y2,Y1,flowY_,w_,h_);
+	ofxKuRasterSubtract(X2,X1,flowX0_,w,h);
+	ofxKuRasterSubtract(Y2,Y1,flowY0_,w,h);
+	int w1, h1;
+	raster_crop(flowX0_, w, h, enl_, flowX_, w1, h1);
+	raster_crop(flowY0_, w, h, enl_, flowY_, w1, h1);
+
+	//TODO check w1 == w_, h1 == h_
 
 	//let's find flow at Z direction (experimental, works poor inside contour)
-	float eps_countZ = 0.3;
+	/*float eps_countZ = 0.3;
 	for (int y=0; y<h_; y++) {
 		for (int x=0; x<w_; x++) {
 			int i = x + w_*y;
@@ -104,7 +122,7 @@ void ofxKuRasterOptFlow::update( vector<unsigned char> mask0, int w0, int h0) {
 				}
 			}
 		}
-	}
+	}*/
 
 }
 

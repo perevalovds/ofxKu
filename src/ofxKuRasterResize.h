@@ -6,7 +6,7 @@
 
 //integer types
 template <typename T, typename T1>
-void ofxKuRasterResize_nearest(vector<T> &input, int w, int h, vector<T1> &output, int out_w, int out_h) {
+void ofxKuRasterResize_nearest(const vector<T> &input, int w, int h, vector<T1> &output, int out_w, int out_h) {
 	int w1 = out_w;
 	int h1 = out_h;
 	output.resize(w1*h1);
