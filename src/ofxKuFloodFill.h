@@ -24,7 +24,7 @@ void ofxKuRasterBlobsFilter(vector<unsigned char> &input, vector<unsigned char> 
 struct ofxKuBlob {
 	int w = 0;
 	int h = 0;
-	vector<int> pnt;	//x = pnt[i] % w, y = pnt[i] / w;
+	vector<int2> pnt;	
 	int Sum = 0;			//field sum
 	ofPoint center_mass(); //center of mass
 	ofRectangle bbox();	//scans all points, so takes time to compute! boundary box on integer grid, point has size (1,1), if blob is empty, returns width=height=-1
@@ -56,7 +56,7 @@ struct ofxKuBlobDetectorParams {
 template <typename T>
 void ofxKuBlobDetectInField(vector<T> &field, int w, int h, const ofxKuBlobDetectorParams &params, vector<ofxKuBlob> &blobs,
 	int roix = -1, int roiy = -1, int roiw = -1, int roih = -1) {
-	vector<int> rose = ofxKuRoseOfWinds(params.sv, w);
+	vector<int2> rose = ofxKuRoseOfWinds(params.sv, w);
 
 	if (roix == -1) {
 		roix = 0;
@@ -69,7 +69,7 @@ void ofxKuBlobDetectInField(vector<T> &field, int w, int h, const ofxKuBlobDetec
 
 	//scan
 	vector<unsigned char> mask(w*h, 1);  //TODO here is memory allocation, please declare as static to works faster
-	vector<int> res;
+	vector<int2> res;
 	for (int Y = roiy; Y < roih; Y++) {
 		for (int X = roix; X < roiw; X++) {
 			int I = X + w * Y;
@@ -81,16 +81,17 @@ void ofxKuBlobDetectInField(vector<T> &field, int w, int h, const ofxKuBlobDetec
 
 				size_t begin = 0;
 				while (begin < res.size()) {
-					int p = res[begin];
+					int2 p = res[begin];
 					begin++;
 					for (int i = 0; i < params.sv; i++) {
-						int q = p + rose[i];
-						int x = q % w;
-						int y = q / w;
-						if (x >= roix && x < roiw && y >= roiy && y < roih && field[q] > 0 && mask[q]) {
-							res.push_back(q);
-							mask[q] = 0;
-							sum += field[q];
+						int2 q = p + rose[i];
+						if (q.x >= roix && q.x < roiw && q.y >= roiy && q.y < roih) {
+							int qi = q.x + w * q.y;
+							if (field[qi] > 0 && mask[qi]) {
+								res.push_back(q);
+								mask[qi] = 0;
+								sum += field[qi];
+							}
 						}
 					}
 				}

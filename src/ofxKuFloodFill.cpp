@@ -79,8 +79,8 @@ ofPoint ofxKuBlob::center_mass() {
 	double Y = 0;
 	int n = pnt.size();
 	for (int i = 0; i < n; i++) {
-		X += pnt[i] % w;
-		Y += pnt[i] / w;
+		X += pnt[i].x;
+		Y += pnt[i].y;
 	}
 	if (n) {
 		X /= n;
@@ -94,13 +94,13 @@ ofRectangle ofxKuBlob::bbox() {	//boundary box
 	if (pnt.empty()) {
 		return ofRectangle(0, 0, -1, -1);
 	}
-	int x0 = pnt[0] % w;
-	int y0 = pnt[0] / w;
+	int x0 = pnt[0].x;
+	int y0 = pnt[0].y;
 	int x1 = x0;
 	int y1 = y0;
 	for (int i = 0; i < pnt.size(); i++) {
-		int x = pnt[i] % w;
-		int y = pnt[i] / w;
+		int x = pnt[i].x;
+		int y = pnt[i].y;
 		x0 = min(x0, x);
 		y0 = min(y0, y);
 		x1 = max(x1, x);
@@ -114,8 +114,8 @@ float ofxKuBlob::rad(ofPoint center) {
 	float R = 0;
 	int n = pnt.size();
 	for (int i = 0; i < n; i++) {
-		int x = pnt[i] % w;
-		int y = pnt[i] / w;
+		const int x = pnt[i].x;
+		const int y = pnt[i].y;
 		R = max(R, ofDist(x, y, center.x, center.y));
 	}
 	return R;
@@ -125,8 +125,8 @@ float ofxKuBlob::rad(ofPoint center) {
 void ofxKuBlob::draw_to_raster(vector<unsigned char> &raster, unsigned char value) {
 	int n = pnt.size();
 	for (int i = 0; i < n; i++) {
-		int x = pnt[i] % w;
-		int y = pnt[i] / w;
+		const int x = pnt[i].x;
+		const int y = pnt[i].y;
 		raster[x + w*y] = value;
 	}
 }
