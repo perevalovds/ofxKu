@@ -4,46 +4,41 @@
 
 //--------------------------------------------------------------
 //sv=4 or 8 - connectivity of pixels
-vector<int> ofxKuRoseOfWinds(int sv, int w) {
-	vector<int> rose(sv);
-	rose[0] = 1;
-	rose[1] = -1;
-	rose[2] = w;
-	rose[3] = -w;
+vector<int2> ofxKuRoseOfWinds(int sv, int w) {
+	vector<int2> rose(sv);
+	rose[0] = int2(1,0);
+	rose[1] = int2(-1,0);
+	rose[2] = int2(0,1);
+	rose[3] = int2(0,-1);
 	if (sv == 8) {
-		rose[4] = 1 + w;
-		rose[5] = 1 - w;
-		rose[6] = -1 + w;
-		rose[7] = -1 - w;
+		rose[4] = int2(1,1);
+		rose[5] = int2(1,-1);
+		rose[6] = int2(-1,1);
+		rose[7] = int2(-1,-1);
 	}
 	return rose;
 }
 
 //--------------------------------------------------------------
 size_t ofxKuFloodFill(vector<unsigned char> &input, int w, int h, int sv,
-                 int x0, int y0, int search, int fillColor, vector<int> *outPoints) {
-	vector<int> *res = (outPoints)?outPoints:(new vector<int>());
+                 int x0, int y0, int search, int fillColor, vector<int2> *outPoints) {
+	vector<int2> *res = (outPoints)?outPoints:(new vector<int2>());
 	res->clear();
 	if (input[x0+w*y0] != search) return 0;
-    res->push_back(x0 + w*y0);
+    res->push_back(int2(x0,y0));
     input[x0 + w*y0] = fillColor;
 
-	vector<int> rose = ofxKuRoseOfWinds(sv, w);
+	vector<int2> rose = ofxKuRoseOfWinds(sv, w);
 
     size_t begin = 0;
     while (begin < res->size()) {
-        int p = (*res)[begin];
-        //int px = p%w;
-        //int py = p/h;
-
+        int2 p = (*res)[begin];
         begin++;
 		for (int i=0; i<sv; i++) {
-			int q = p+rose[i];
-			int x = q % w;
-			int y = q / w;
-			if (x >= 0 && x < w && y >= 0 && y < h && input[q] == search) {
+			int2 q = p+rose[i];			
+			if (q.x >= 0 && q.x < w && q.y >= 0 && q.y < h && input[q.x+w*q.y] == search) {
 				res->push_back(q);
-				input[q] = fillColor;
+				input[q.x+w*q.y] = fillColor;
 			}
 		}
     }
@@ -59,7 +54,7 @@ void ofxKuRasterBlobsFilter(vector<unsigned char> &input, vector<unsigned char> 
 	output = input;
 	vector<unsigned char> mask;
 	ofxKuRasterRangeMask(input, mask, w, h, good_val0, good_val1, (unsigned char) (0), (unsigned char) (255) );
-	vector<int> fillPoints;
+	vector<int2> fillPoints;
 	for (int y=0; y<h; y++) {
 		for (int x=0; x<w; x++) {
 			if (mask[x+w*y] == 255) {
@@ -67,8 +62,8 @@ void ofxKuRasterBlobsFilter(vector<unsigned char> &input, vector<unsigned char> 
 				if (area < min_area) {
 					//erasing small area
 					for (int i=0; i<fillPoints.size(); i++) {
-						int p = fillPoints[i];
-						output[p%w + w*(p/w)] = 0;
+						int2 p = fillPoints[i];
+						output[p.x + w*p.y] = 0;
 					}
 				}
 			}

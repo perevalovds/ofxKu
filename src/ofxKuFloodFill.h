@@ -1,17 +1,18 @@
 ﻿#pragma once
 
 #include "ofMain.h"
+#include "int2.h"
 
 //Flood fill and blobs processing
 
 //Rose of winds
 //sv=4 or 8 - connectivity of pixels
-vector<int> ofxKuRoseOfWinds(int sv, int w);
+vector<int2> ofxKuRoseOfWinds(int sv, int w);
 
 //Flood fill
 //outPoints as x+w*y
 size_t ofxKuFloodFill(vector<unsigned char> &input, int w, int h, int sv,
-                 int x0, int y0, int search, int fillColor, vector<int> *outPoints = 0); 
+                 int x0, int y0, int search, int fillColor, vector<int2> *outPoints = 0); 
 
 //Remove small blobs, which has values [good_val0, good_val1] and area < min_area. For this blobs, set these to erase_val
 //Function can work in-place, that is "output" can be "input"
