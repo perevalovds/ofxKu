@@ -90,6 +90,12 @@ ofPoint ofxKuBlob::center_mass() {
 }
 
 //--------------------------------------------------------------
+glm::vec2 ofxKuBlob::center_mass2() { //center of mass
+	auto p = center_mass();
+	return glm::vec2(p.x, p.y);
+}
+
+//--------------------------------------------------------------
 ofRectangle ofxKuBlob::bbox() {	//boundary box
 	if (pnt.empty()) {
 		return ofRectangle(0, 0, -1, -1);

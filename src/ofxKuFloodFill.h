@@ -27,6 +27,7 @@ struct ofxKuBlob {
 	vector<int2> pnt;	
 	int Sum = 0;			//field sum
 	ofPoint center_mass(); //center of mass
+	glm::vec2 center_mass2(); //center of mass
 	ofRectangle bbox();	//scans all points, so takes time to compute! boundary box on integer grid, point has size (1,1), if blob is empty, returns width=height=-1
 	float rad(ofPoint center);
 	void draw_to_raster(vector<unsigned char> &raster, unsigned char value);
