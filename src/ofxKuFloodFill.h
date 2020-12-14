@@ -77,7 +77,7 @@ void ofxKuBlobDetectInField(vector<T> &field, int w, int h, const ofxKuBlobDetec
 				mask[I] = 0;
 				int sum = field[I];
 				res.clear();
-				res.push_back(I);
+				res.push_back(int2(X,Y));
 
 				size_t begin = 0;
 				while (begin < res.size()) {
