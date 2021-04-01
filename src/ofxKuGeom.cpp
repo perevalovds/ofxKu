@@ -69,7 +69,7 @@ bool ofxKuGeomLine2D::intersect_segments(const ofxKuGeomLine2D &line, glm::vec2 
 
     //check that point is inside segments
     bool inside = ofInRange(X, min(x1, x2), max(x1, x2)) && ofInRange(Y, min(y1, y2), max(y1, y2))
-        && ofInRange(X, min(x1, x2), max(x1, x2)) && ofInRange(Y, min(y1, y2), max(y1, y2));
+        && ofInRange(X, min(x3, x4), max(x3, x4)) && ofInRange(Y, min(y3, y4), max(y3, y4));
     
     if (!inside) {
         return false;
