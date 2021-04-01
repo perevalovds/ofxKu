@@ -1,12 +1,17 @@
 #include "ofxKuGeom.h"
 
 //--------------------------------------------------------
-ofxKuGeomLine2D::ofxKuGeomLine2D(const ofPoint &p0, const ofPoint &p1) {
+ofxKuGeomLine2D::ofxKuGeomLine2D(const glm::vec2 &p0, const glm::vec2 &p1) {
 	setup(p0, p1);
 }
 
 //--------------------------------------------------------
-void ofxKuGeomLine2D::setup(const ofPoint &p0, const ofPoint &p1) {
+ofxKuGeomLine2D::ofxKuGeomLine2D(float x1, float y1, float x2, float y2) {
+    setup(glm::vec2(x1, y1), glm::vec2(x2, y2));
+}
+
+//--------------------------------------------------------
+void ofxKuGeomLine2D::setup(const glm::vec2 &p0, const glm::vec2 &p1) {
 	this->p0 = p0; this->p1 = p1;
 	a = p1.y - p0.y;
 	b = p0.x - p1.x;
@@ -22,23 +27,68 @@ void ofxKuGeomLine2D::setup(const ofPoint &p0, const ofPoint &p1) {
 
 //--------------------------------------------------------
 //signed distance
-float ofxKuGeomLine2D::sgd(const ofPoint &p) {
+float ofxKuGeomLine2D::sgd(const glm::vec2 &p) {
 	return p.x * a + p.y * b + c;
 }
 
 //--------------------------------------------------------
-ofPoint ofxKuGeomLine2D::project(const ofPoint &p) {	//project point onto line
+glm::vec2 ofxKuGeomLine2D::project(const glm::vec2 &p) {	//project point onto line
 	float t = sgd(p);
 	return p - ofPoint(a, b)*t;
 }
 
 //--------------------------------------------------------
-ofPoint ofxKuGeomLine2D::mirror(const ofPoint &p) {	//mirror
+glm::vec2 ofxKuGeomLine2D::mirror(const glm::vec2 &p) {	//mirror
 	float t = sgd(p);
 	return p - ofPoint(a, b)*(2*t);
 }
 
 //--------------------------------------------------------
+//if pcross is not NULL, sets to crossing point
+//note: we don't consider boundary cases such as parallel lines
+bool ofxKuGeomLine2D::intersect_segments(const ofxKuGeomLine2D &line, glm::vec2 *pcross) {
+    //https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
+    const float &x1 = p0.x;
+    const float &y1 = p0.y;
+    const float& x2 = p1.x;
+    const float& y2 = p1.y;
+    const float& x3 = line.p0.x;
+    const float& y3 = line.p0.y;
+    const float& x4 = line.p1.x;
+    const float& y4 = line.p1.y;
+
+    float D = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+    if (fabs(D) < 0.00001) {    //TODO parameters EPS
+        return false;
+    }
+
+    float D1 = x1 * y2 - y1 * x2;
+    float D2 = x3 * y4 - y3 * x4;
+    float X = (D1 * (x3 - x4) - (x1 - x2) * D2) / D;
+    float Y = (D1 * (y3 - y4) - (y1 - y2) * D2) / D;
+
+    //check that point is inside segments
+    bool inside = ofInRange(X, min(x1, x2), max(x1, x2)) && ofInRange(Y, min(y1, y2), max(y1, y2))
+        && ofInRange(X, min(x1, x2), max(x1, x2)) && ofInRange(Y, min(y1, y2), max(y1, y2));
+    
+    if (!inside) {
+        return false;
+    }
+    if (pcross) {
+        pcross->x = X;
+        pcross->y = Y;
+    }
+
+    return true;
+
+}
+
+//--------------------------------------------------------
+bool ofxKuGeomLine2D::intersect_segments(const glm::vec2& p0, const glm::vec2& p1, glm::vec2* pcross) {
+    ofxKuGeomLine2D line(p0, p1);
+    return intersect_segments(line, pcross);
+}
+
 
 //--------------------------------------------------------
 //Minimal distance between two point sets

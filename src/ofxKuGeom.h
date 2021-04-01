@@ -19,19 +19,24 @@
 #include "ofMain.h"
 
 struct ofxKuGeomLine2D {
-	ofPoint p0, p1;
+	glm::vec2 p0, p1;
 	//(a,b) looks on the right in left-handed coord.system (oF screen)
 	float a = 0;
 	float b = 0;
 	float c = 0;
 	ofxKuGeomLine2D() {}
-	ofxKuGeomLine2D(const ofPoint &p0, const ofPoint &p1);
-	void setup(const ofPoint &p0, const ofPoint &p1);
+	ofxKuGeomLine2D(const glm::vec2 &p0, const glm::vec2 &p1);
+	ofxKuGeomLine2D(float x1, float y1, float x2, float y2);
+	void setup(const glm::vec2 &p0, const glm::vec2 &p1);
 
-	float sgd(const ofPoint &p);		//signed distance
-	ofPoint project(const ofPoint &p);	//project point onto line
-	ofPoint mirror(const ofPoint &p);	//mirror
+	float sgd(const glm::vec2 &p);		//signed distance to point
+	glm::vec2 project(const glm::vec2 &p);	//project point onto line
+	glm::vec2 mirror(const glm::vec2 &p);	//mirror point 
 
+	//if pcross is not NULL, sets to crossing point
+	//note: we don't consider boundary cases such as parallel lines
+	bool intersect_segments(const ofxKuGeomLine2D &line, glm::vec2 *pcross = NULL); 
+	bool intersect_segments(const glm::vec2& p0, const glm::vec2& p1, glm::vec2* pcross = NULL);
 };
 
 //Minimal distance between two point sets
