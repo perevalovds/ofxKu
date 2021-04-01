@@ -9,9 +9,13 @@ It contains classes and functions for graphics, image analysis and working with 
 * ofxKuFileTime::isNewerThan function implementation doesn't works in oF >= 0.9.0, so simplest workaround is change it to return always 'true'.
 
 ## Compression and hash
-  ofxKuCompress - RLE and bit compression
-  ofxKuUtilsCrc32 - computing CRC32 hash
-  ofxKuUtilsBase64 - encoding and decoding base64 (code is based on https://github.com/ReneNyffenegger/cpp-base64  by Rene Nyffenegger)
+  * ofxKuCompress - RLE and bit compression
+  * ofxKuUtilsCrc32 - computing CRC32 hash
+  * ofxKuUtilsBase64 - encoding and decoding base64 (code is based on https://github.com/ReneNyffenegger/cpp-base64  by Rene Nyffenegger)
+  
+## Random numbers and probability
+    * ofxKuRandom 
+    * ofxKuProbability
   
 ## Strings
   ofxKuStrings
@@ -34,7 +38,8 @@ It contains classes and functions for graphics, image analysis and working with 
       * compute line equation,
       * compute signed distance from a line, 
       * project point on line, 
-      * mirror point of line.
+      * mirror point of line,
+      * cross two line segmants.
 
    * Point clouds:
       * minimal distance between two point sets
