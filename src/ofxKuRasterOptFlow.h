@@ -54,8 +54,8 @@ private:
 		w1 = w - 2 * enlarge;
 		h1 = h - 2 * enlarge;
 		out.resize(w1*h1);	
-		for (int y = 0; y < h; y++) {
-			for (int x = 0; x < w; x++) {
+		for (int y = 0; y < h1; y++) {
+			for (int x = 0; x < w1; x++) {
 				out[x + w1 * y] = in[x + enlarge + w * (y + enlarge)];
 			}
 		}
