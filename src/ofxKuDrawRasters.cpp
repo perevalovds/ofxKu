@@ -1,10 +1,13 @@
 ﻿#include "ofxKuDrawRasters.h"
 
 //--------------------------------------------------------------
-void ofxKuDrawRaster(vector<unsigned char> &pix, int w, int h, float X, float Y, float W, float H, bool nearest_filter) {
-	if (pix.size() != w*h || w*h <= 0) return;
+void ofxKuDrawRaster(vector<unsigned char> &pix, int w, int h, float X, float Y, float W, float H, bool nearest_filter, bool rgb) {
+	if (pix.size() != w * h * ((rgb) ? 3 : 1) || w * h <= 0) {
+		cout << "ofxKuDrawRaster error, bad pix size" << endl;
+		return;
+	}
 	ofTexture texture;
-	texture.loadData(&pix[0],w,h,GL_LUMINANCE);
+	texture.loadData(&pix[0],w,h,(rgb)?GL_RGB:GL_LUMINANCE);
 	if (nearest_filter) {
 		texture.setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	}
