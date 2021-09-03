@@ -292,7 +292,7 @@ void ofxKuSetNormals(ofMesh &mesh) {
 	//Normalize the normal's length
 	for (int i = 0; i < nV; i++) {
 		//norm[i].normalize();
-		glm::normalize(norm[i]);
+		norm[i] = glm::normalize(norm[i]);
 	}
 
 	//Set the normals to mesh
