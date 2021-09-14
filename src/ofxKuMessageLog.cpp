@@ -110,7 +110,7 @@ void ofxKuMessageLogBigMessage::draw(ofxFontStash &font) {
 }
 
 //--------------------------------------------------------------
-void ofxKuMessageLog::draw(float x, float y, float h, float font_size) {	//recomputes capacity using h
+void ofxKuMessageLog::draw(float x, float y, float h, float font_size, bool use_system_font) {	//recomputes capacity using h
 	if (disabled()) return;
 	//update new capacity
 	params.fit_capacity(h, font_size);
@@ -120,7 +120,10 @@ void ofxKuMessageLog::draw(float x, float y, float h, float font_size) {	//recom
 
 	for (int i = 0; i < lines.size(); i++) {
 		ofSetColor(colors[i]);
-		font.draw(lines[i], font_size, x, y + i * font_size);
+		if (use_system_font) {
+			ofDrawBitmapString(lines[i], x, y + i * font_size);
+		}
+		else font.draw(lines[i], font_size, x, y + i * font_size);
 	}
 	//string s = ofJoinString(lines, "\n");
 	//font.drawMultiLine(s, params.size, params.pos.x, params.pos.y);
@@ -130,16 +133,18 @@ void ofxKuMessageLog::draw(float x, float y, float h, float font_size) {	//recom
 }
 
 //--------------------------------------------------------------
-void ofxKuMessageLog::draw() { //uses params.capacity
+void ofxKuMessageLog::draw(bool use_system_font) { //uses params.capacity
 	if (disabled()) return;
 
-	//ofSetColor(params.color);
-	//font.draw("Три", 30, x, y);
+	ofSetColor(params.color);
 	ofFill();	//required for using ofxFontStash
 	ofPoint &pos = params.pos;
 	for (int i = 0; i < lines.size(); i++) {
 		ofSetColor(colors[i]);
-		font.draw(lines[i], params.font_size, pos.x, pos.y + i * params.font_size);
+		if (use_system_font) {
+			ofDrawBitmapString(lines[i], pos.x, pos.y + i * params.font_size);
+		}
+		else font.draw(lines[i], params.font_size, pos.x, pos.y + i * params.font_size);
 	}
 	//string s = ofJoinString(lines, "\n");
 	//font.drawMultiLine(s, params.size, params.pos.x, params.pos.y);

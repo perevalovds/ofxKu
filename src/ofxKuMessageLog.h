@@ -77,11 +77,11 @@ struct ofxKuMessageLog {
 	void big_message(ofxKuMessageLogBigMessage &big);
 	
 	//use it then you don't want to care of pos and capacity, and it will be computed automatically
-	void draw(float x, float y, float h, float font_size = 20);	
+	void draw(float x, float y, float h, float font_size = 20, bool use_system_font = false);
 
 	//DEPRECATED
 	//use it when you have desired pos and capacity and font_size and set it in set_parameters
-	void draw();
+	void draw(bool use_system_font = false);
 
 
 	ofxFontStash font;
