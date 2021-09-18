@@ -4,6 +4,17 @@
 
 #include "ofMain.h"
 
+//mean value of the vector
+template <typename T>
+double ofxKuMean(const vector<T> &input) {
+	if (input.empty()) return 0;
+	double Sum = 0;
+	for (auto &v : input) {
+		Sum += v;
+	}
+	return Sum / input.size();
+}
+
 //mean index of the histogram
 template <typename T>
 double ofxKuMathMeanIndex(const vector<T> &input) {
@@ -51,3 +62,5 @@ int ofxKuArgMax(const vector<T> &input) {
 	}
 	return j;
 }
+
+
