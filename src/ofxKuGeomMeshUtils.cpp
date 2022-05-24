@@ -254,10 +254,22 @@ void ofxKuMeshShuffle(vector<glm::vec3> &v, vector<ofIndexType> &t, vector<glm::
 	}
 }
 
+//--------------------------------------------------------
+// Remove duplicated vertices - it occurs for IcoPrimitive, for example
+void ofxKuMeshRemoveDuplicates(ofMesh& mesh_in, ofMesh& mesh_out, float eps) {
+	mesh_out = mesh_in;
+	//TODO!
+}
 
 //--------------------------------------------------------
-//установить нормали
-void ofxKuSetNormals(ofMesh &mesh) {
+// Set normals
+void ofxKuSetNormals(ofMesh &mesh, bool invert, bool remove_duplicates, float eps) {
+	if (remove_duplicates) {
+		ofMesh mesh2 = mesh;
+		ofxKuMeshRemoveDuplicates(mesh, mesh2, eps);
+		mesh = mesh2;
+	}
+
 	//The number of the vertices
 	int nV = mesh.getNumVertices();
 
@@ -289,10 +301,12 @@ void ofxKuSetNormals(ofMesh &mesh) {
 		norm[i3] += dir;
 	}
 
-	//Normalize the normal's length
+	//Normalize the normal's length and invert if required
 	for (int i = 0; i < nV; i++) {
-		//norm[i].normalize();
 		norm[i] = glm::normalize(norm[i]);
+		if (invert) {
+			norm[i] = -norm[i];
+		}
 	}
 
 	//Set the normals to mesh

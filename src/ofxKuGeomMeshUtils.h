@@ -22,9 +22,13 @@ void ofxKuSaveObjFile(ofMesh &mesh, string fileName, bool setupNormals,
 
 void ofxKuCreateWireframe(ofMesh &mesh, ofMesh &mesh_out);	//for triangle mesh
 
-void ofxKuSetNormals( ofMesh &mesh );
+// Remove duplicated vertices - it occurs for IcoPrimitive, for example
+void ofxKuMeshRemoveDuplicates(ofMesh& mesh_in, ofMesh& mesh_out, float eps = 0.001);   
 
-//shuffle vertices and triangles
+// Set normals
+void ofxKuSetNormals(ofMesh &mesh, bool invert = false, bool remove_duplicates = false, float eps = 0.001);
+
+// Shuffle vertices and triangles
 void ofxKuMeshShuffle( vector<glm::vec3> &v, vector<ofIndexType> &t, vector<glm::vec2> &tex,
                    bool useTex = true, float shuffle_count=2 );
 
