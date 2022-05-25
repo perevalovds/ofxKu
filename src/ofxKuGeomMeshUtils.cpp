@@ -256,17 +256,72 @@ void ofxKuMeshShuffle(vector<glm::vec3> &v, vector<ofIndexType> &t, vector<glm::
 
 //--------------------------------------------------------
 // Remove duplicated vertices - it occurs for IcoPrimitive, for example
-void ofxKuMeshRemoveDuplicates(ofMesh& mesh_in, ofMesh& mesh_out, float eps) {
-	mesh_out = mesh_in;
-	//TODO!
-}
+void ofxKuMeshRemoveDuplicates(ofMesh& mesh_in, ofMesh& mesh_out, float eps, bool verbose_duplicated) {
+	if (verbose_duplicated) {
+		cout << "Removing duplicated vertices, input vertices " << mesh_in.getNumVertices() << endl;
+	}
+	// Build vertices
+	const float eps2 = eps * eps;
+	auto& input = mesh_in.getVertices();
+	vector<int> remap(input.size());
+	vector<int> indices;
+	vector<glm::vec3> pnt;
 
+	for (int i = 0; i < input.size(); i++) {
+		bool unique = true;
+		for (int j = 0; j < pnt.size(); j++) {
+			if (glm::distance2(input[i], pnt[j]) < eps2) {
+				unique = false;
+				remap[i] = j;
+
+				if (verbose_duplicated) {
+					cout << "Duplicated vertex " << i << " -> " << j << endl;
+				}
+				break;
+			}
+		}
+		if (unique) {
+			pnt.push_back(input[i]);
+			remap[i] = pnt.size() - 1;
+			indices.push_back(i);
+		}
+	}
+
+	// Build output
+	if (pnt.size() == input.size()) {
+		mesh_out = mesh_in;
+		if (verbose_duplicated) {
+			cout << "No duplicates" << endl;
+		}
+	}
+	else {
+		mesh_out.clear();
+		// Vertices
+		mesh_out.addVertices(pnt);
+		// Normals
+		if (mesh_in.getNumNormals() == pnt.size()) {
+			for (int j = 0; j < pnt.size(); j++) {
+				mesh_out.addNormal(mesh_in.getNormal(indices[j]));
+			}
+		}
+		// Tex coords
+		if (mesh_in.getNumTexCoords() == pnt.size()) {
+			for (int j = 0; j < pnt.size(); j++) {
+				mesh_out.addTexCoord(mesh_in.getTexCoord(indices[j]));
+			}
+		}
+		// Triangles
+		for (int i = 0; i < mesh_in.getNumIndices(); i++) {
+			mesh_out.addIndex(remap[mesh_in.getIndex(i)]);
+		}
+	}
+}
 //--------------------------------------------------------
 // Set normals
-void ofxKuSetNormals(ofMesh &mesh, bool invert, bool remove_duplicates, float eps) {
+void ofxKuSetNormals(ofMesh &mesh, bool invert, bool remove_duplicates, float eps, bool verbose_duplicated) {
 	if (remove_duplicates) {
 		ofMesh mesh2 = mesh;
-		ofxKuMeshRemoveDuplicates(mesh, mesh2, eps);
+		ofxKuMeshRemoveDuplicates(mesh, mesh2, eps, verbose_duplicated);
 		mesh = mesh2;
 	}
 
