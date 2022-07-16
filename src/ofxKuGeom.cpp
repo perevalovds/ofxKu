@@ -89,6 +89,39 @@ bool ofxKuGeomLine2D::intersect_segments(const glm::vec2& p0, const glm::vec2& p
     return intersect_segments(line, pcross);
 }
 
+//--------------------------------------------------------
+bool ofxKuGeomPlane::setup(const glm::vec3& origin, const glm::vec3& normal, bool normalize) {
+    base = origin;
+    norm = normal;
+    if (normalize) {
+        if (glm::length2(norm) > 0) {
+            norm = glm::normalize(norm);
+        }
+        else {
+            d = 0;
+            return false;
+        }
+    }
+    d = -glm::dot(norm, base);
+    return true;
+}
+
+//--------------------------------------------------------
+bool ofxKuGeomPlane::setup(const glm::vec3& origin, const glm::vec3& vec1, const glm::vec3& vec2) {
+    const bool normalize = true;
+    return setup(origin, glm::cross(vec1, vec2), normalize);
+}
+
+//--------------------------------------------------------
+float ofxKuGeomPlane::signed_distance(const glm::vec3& point) {
+    return glm::dot(norm, point) + d;
+}
+
+//--------------------------------------------------------
+// Projection of the point to plane
+glm::vec3 ofxKuGeomPlane::projection(const glm::vec3& point) {
+    return point - norm * signed_distance(point);
+}
 
 //--------------------------------------------------------
 //Minimal distance between two point sets

@@ -1,20 +1,26 @@
 #pragma once
 
-//ofxKuGeom - geometrical utils
-//Structure ofxKuGeomLine2D for working with line in 2D:
-// - compute line equation,
-// - compute signed distance from a line,
-// - project point on line,
-// - mirror point of line.
+/*
+ofxKuGeom - geometrical utils
+Structure ofxKuGeomLine2D for working with line in 2D:
+ - compute line equation,
+ - compute signed distance from a line,
+ - project point on line,
+ - mirror point of line.
 
-//Point clouds:
-// - minimal distance between two point sets
-//Polygons:
-// - signed triangle area
-// - compute if point is inside polygon
-//Sphere:
-// - convert points from unit square to unit sphere and back
-// - create circle on a unit sphere
+Plane:
+ - signed distance from point to plane
+ - projection of the point to plane
+
+Point clouds:
+ - minimal distance between two point sets
+Polygons:
+ - signed triangle area
+ - compute if point is inside polygon
+Sphere:
+ - convert points from unit square to unit sphere and back
+ - create circle on a unit sphere
+*/
 
 #include "ofMain.h"
 
@@ -38,6 +44,22 @@ struct ofxKuGeomLine2D {
 	bool intersect_segments(const ofxKuGeomLine2D &line, glm::vec2 *pcross = NULL); 
 	bool intersect_segments(const glm::vec2& p0, const glm::vec2& p1, glm::vec2* pcross = NULL);
 };
+
+struct ofxKuGeomPlane {
+	bool setup(const glm::vec3& origin, const glm::vec3& normal, bool normalize = false);
+	bool setup(const glm::vec3& origin, const glm::vec3& vec1, const glm::vec3& vec2);
+
+	// Signed distance from point to plane
+	float signed_distance(const glm::vec3& point);
+
+	// Projection of the point to plane
+	glm::vec3 projection(const glm::vec3& point);
+
+	glm::vec3 base;
+	glm::vec3 norm;
+	float d = 0;	//dot(norm,p) + d = 0 - equation of the plane
+};
+
 
 //Minimal distance between two point sets
 float ofxKuPointCloudsDistance(const vector<ofPoint> &A, const vector<ofPoint> &B);
