@@ -348,7 +348,7 @@ void ofxKuSetNormals(ofMesh &mesh, bool invert, bool remove_duplicates, float ep
 		const ofPoint &v3 = mesh.getVertex(i3);
 
 		//Compute the triangle's normal
-		ofPoint dir = ((v2 - v1).crossed(v3 - v1)).normalized();
+		ofPoint dir = -((v2 - v1).crossed(v3 - v1)).normalized();
 
 		//Accumulate it to norm array for i1, i2, i3
 		norm[i1] += dir;
@@ -398,6 +398,14 @@ void ofxKuCreateWireframe(ofMesh &mesh, ofMesh &mesh_out) { //for triangle mesh
 		mesh_out.addIndex(i1);
 	}
 
+}
+
+//--------------------------------------------------------
+// Move and scale mesh vertices
+void ofxKuMeshTransform(vector<glm::vec3>& v, glm::vec3 translate, glm::vec3 scale) {
+	for (auto& vert : v) {
+		vert = vert * scale + translate;
+	}
 }
 
 //--------------------------------------------------------

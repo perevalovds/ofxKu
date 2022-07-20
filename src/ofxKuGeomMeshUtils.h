@@ -32,6 +32,9 @@ void ofxKuSetNormals(ofMesh &mesh, bool invert = false, bool remove_duplicates =
 void ofxKuMeshShuffle( vector<glm::vec3> &v, vector<ofIndexType> &t, vector<glm::vec2> &tex,
                    bool useTex = true, float shuffle_count=2 );
 
+// Move and scale mesh vertices
+void ofxKuMeshTransform(vector<glm::vec3>& v, glm::vec3 translate, glm::vec3 scale);
+
 //-------------------------
 
 
