@@ -26,7 +26,10 @@ Sphere:
 
 struct ofxKuGeomLine2D {
 	glm::vec2 p0, p1;
-	//(a,b) looks on the right in left-handed coord.system (oF screen)
+	glm::vec2 normal;
+	//(a,b) = normal, looks on the right in left-handed coord.system (oF screen)
+	//normal is normalized
+	// conormal directed as p1-p0 is (-b,a)
 	float a = 0;
 	float b = 0;
 	float c = 0;
@@ -43,6 +46,8 @@ struct ofxKuGeomLine2D {
 	//note: we don't consider boundary cases such as parallel lines
 	bool intersect_segments(const ofxKuGeomLine2D &line, glm::vec2 *pcross = NULL); 
 	bool intersect_segments(const glm::vec2& p0, const glm::vec2& p1, glm::vec2* pcross = NULL);
+
+	void draw_rect(float rad = 0.5);	//draw quad with "rad" distance for creating hi-res shots
 };
 
 struct ofxKuGeomPlane {

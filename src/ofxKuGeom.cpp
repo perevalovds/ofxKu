@@ -22,6 +22,7 @@ void ofxKuGeomLine2D::setup(const glm::vec2 &p0, const glm::vec2 &p1) {
 		a /= len;
 		b /= len;
 	}
+    normal = glm::vec2(a, b);
 	c = -a * p0.x - b * p0.y;
 }
 
@@ -87,6 +88,18 @@ bool ofxKuGeomLine2D::intersect_segments(const ofxKuGeomLine2D &line, glm::vec2 
 bool ofxKuGeomLine2D::intersect_segments(const glm::vec2& p0, const glm::vec2& p1, glm::vec2* pcross) {
     ofxKuGeomLine2D line(p0, p1);
     return intersect_segments(line, pcross);
+}
+
+//--------------------------------------------------------
+void ofxKuGeomLine2D::draw_rect(float rad) {	//draw quad with "rad" distance
+    glm::vec2 norm = normal * rad;
+    glm::vec2 con = glm::vec2(-b, a) * rad;   // conormal
+    ofBeginShape();
+    ofVertex(p0 - con + norm );
+    ofVertex(p0 - con - norm );
+    ofVertex(p1 + con - norm );
+    ofVertex(p1 + con + norm );
+    ofEndShape();
 }
 
 //--------------------------------------------------------
