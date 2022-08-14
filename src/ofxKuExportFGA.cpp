@@ -35,4 +35,35 @@ void ofxKuExportFGA(string file_name,
 	ofxKuFileWriteStrings(file, file_name);
 	cout << "   ...done" << endl;
 }
+
 //--------------------------------------------------------------------------------
+void ofxKuExportVectorFieldAsAtlasImage(string tif_file_name,
+	const vector<glm::vec3> vector_field,
+	int nx, int ny, int nz, float max_field_value)
+{
+	if (!(nx == ny && ny == nz && nz == 64)) {
+		cout << "ofxKuExportVectorFieldAsImage error - only 64x64x64 vector images are supported" << endl;
+		return;
+	}
+	int n = nx;
+	int atlas_count = 8;
+	int w = atlas_count * n;
+	int h = w;
+	ofFloatPixels pix;
+	pix.allocate(w, h, 3);
+	for (int z = 0; z < nz; z++) {
+		int atlas_x = (z % atlas_count)*nx;
+		int atlas_y = (z / atlas_count)*ny;
+		for (int y = 0; y < ny; y++) {
+			for (int x = 0; x < nx; x++) {
+				auto& v = vector_field[x + nx * (y + ny * z)];
+				float r = ofMap(v.x, -max_field_value, max_field_value, 0, 1, true);
+				float g = ofMap(v.y, -max_field_value, max_field_value, 0, 1, true);
+				float b = ofMap(v.z, -max_field_value, max_field_value, 0, 1, true);
+				pix.setColor(x + atlas_x, y + atlas_y, ofFloatColor(r, g, b));
+			}
+		}
+	}
+	ofSaveImage(pix, tif_file_name);
+
+}
