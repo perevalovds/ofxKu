@@ -111,7 +111,7 @@ struct ofxKuGeomTriangle3D {
 		auto cross = tri.cross_line(line);
 		cout << "crossed " << cross.crossed << " t " << cross.t << "   point " << cross.p.x << ", " << cross.p.y << ", " << cross.p.z << endl;
 	*/
-	ofxKuGeomLine3D::CrossResult cross_line(const ofxKuGeomLine3D& line) const;
+	ofxKuGeomLine3D::CrossResult cross_line(const ofxKuGeomLine3D& line, float eps = 0.001) const;
 
 	glm::vec3 p0;
 	glm::vec3 p1;

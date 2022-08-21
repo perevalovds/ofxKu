@@ -205,8 +205,8 @@ void ofxKuGeomTriangle3D::setup(const glm::vec3& p0, const glm::vec3& p1, const 
     plane.setup_by_points(p0, p1, p2);
 
     plane01.setup(p0, glm::cross(plane.norm, p1 - p0));
-    plane12.setup(p0, glm::cross(plane.norm, p2 - p1));
-    plane20.setup(p0, glm::cross(plane.norm, p0 - p2));
+    plane12.setup(p1, glm::cross(plane.norm, p2 - p1));
+    plane20.setup(p2, glm::cross(plane.norm, p0 - p2));
     glm::vec3 M = (p0 + p1 + p2) / 3;
     if (plane01.signed_distance(M) < 0) 
         plane01.revert_normal();
@@ -223,16 +223,16 @@ void ofxKuGeomTriangle3D::setup(const glm::vec3& p0, const glm::vec3& p1, const 
 2. Create 3 planes at side,
 and check if p is inside each of the half-space limited by plane
 */
-ofxKuGeomLine3D::CrossResult ofxKuGeomTriangle3D::cross_line(const ofxKuGeomLine3D& line) const {
+ofxKuGeomLine3D::CrossResult ofxKuGeomTriangle3D::cross_line(const ofxKuGeomLine3D& line, float eps) const {
     // Check triangle's plane crosses segment
     ofxKuGeomLine3D::CrossResult cross = plane.cross_line(line);
     bool result = (cross.crossed && line.is_t_valid(cross.t));
 
     // Check crossing point is inside triangle
     if (result) {
-        result = plane01.signed_distance(cross.p) >= 0
-            && plane12.signed_distance(cross.p) >= 0
-            && plane20.signed_distance(cross.p) >= 0;
+        result = plane01.signed_distance(cross.p) >= -eps
+            && plane12.signed_distance(cross.p) >= -eps
+            && plane20.signed_distance(cross.p) >= -eps;
     }
     if (!result) {
         return ofxKuGeomLine3D::CrossResult();
