@@ -59,12 +59,18 @@ struct ofxKuGeomLine3D {
 	ofxKuGeomLine3D() {}
 	ofxKuGeomLine3D(const glm::vec3& p0, const glm::vec3& p1);
 	void setup(const glm::vec3& p0, const glm::vec3& p1);
+
+	struct CrossResult {
+		bool crossed = false;
+		glm::vec3 p = glm::vec3(0,0,0);
+		float t = 0;	// t in [0,1] means that point inside a segment [p0, p1]
+	};
 };
 
 
 // Plane in 3D
 struct ofxKuGeomPlane {
-	bool setup(const glm::vec3& origin, const glm::vec3& normal, bool normalize = false);
+	bool setup(const glm::vec3& origin, const glm::vec3& normal, bool normalize = true);
 	bool setup(const glm::vec3& origin, const glm::vec3& vec1, const glm::vec3& vec2);
 	bool setup_by_points(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2);
 
@@ -75,7 +81,7 @@ struct ofxKuGeomPlane {
 	glm::vec3 projection(const glm::vec3& point) const;
 
 	// Crossing plane and line, if t in [0,1] it means crossed as segment
-	void cross_line(const ofxKuGeomLine3D& line, glm::vec3& pout, float& t, bool& crossed) const;
+	ofxKuGeomLine3D::CrossResult cross_line(const ofxKuGeomLine3D& line) const;
 
 	glm::vec3 base;
 	glm::vec3 norm;
@@ -84,10 +90,18 @@ struct ofxKuGeomPlane {
 
 // Triangle in 3D
 struct ofxKuGeomTriangle3D {
+	ofxKuGeomTriangle3D() {}
+	ofxKuGeomTriangle3D(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2);
 	void setup(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2);
 
 	// Crossing triangle and line, if t in [0,1] it means crossed as segment
-	void cross_line(const ofxKuGeomLine3D& line, glm::vec3& pout, float& t, bool& crossed) const;
+	/* Usage:
+		ofxKuGeomLine3D line(glm::vec3(0, 0, 0), glm::vec3(0, 0, 10));
+		ofxKuGeomTriangle3D tri(glm::vec3(-1, -1, 1), glm::vec3(0, 1, 1), glm::vec3(1, -1, 1));
+		auto cross = tri.cross_line(line);
+		cout << "crossed " << cross.crossed << " t " << cross.t << "   point " << cross.p.x << ", " << cross.p.y << ", " << cross.p.z << endl;
+	*/
+	ofxKuGeomLine3D::CrossResult cross_line(const ofxKuGeomLine3D& line) const;
 
 	glm::vec3 p0;
 	glm::vec3 p1;

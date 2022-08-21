@@ -162,27 +162,30 @@ plane n*p + d = 0
 n*(a+qt)+d = n*a + n*qt+d = 0
 t = - (n*a+d)/(n*q),  and n*q != 0
 */
-void ofxKuGeomPlane::cross_line(const ofxKuGeomLine3D& line, glm::vec3& pout, float& t, bool& crossed) const {
+ofxKuGeomLine3D::CrossResult ofxKuGeomPlane::cross_line(const ofxKuGeomLine3D& line) const {
     float n_q = glm::dot(norm, line.dir_unnormalized);
-    if (fabs(n_q) < 0.00001) {      // Not interested in parallel case
-        pout = glm::vec3(0, 0, 0);
-        t = 0;
-        crossed = false;
-        return;
+    if (fabs(n_q) < 0.00001) {      // We are not interested in parallel case
+        return ofxKuGeomLine3D::CrossResult();
     }
-    t = -(glm::dot(norm, line.p0) + d) / n_q;
-    pout = line.p0 + line.dir_unnormalized * t;
-    crossed = true;
+    ofxKuGeomLine3D::CrossResult cross;
+    cross.crossed = true;
+    cross.t = -(glm::dot(norm, line.p0) + d) / n_q;
+    cross.p = line.p0 + line.dir_unnormalized * cross.t;
+    return cross;
 }
 
 
+//--------------------------------------------------------
+ofxKuGeomTriangle3D::ofxKuGeomTriangle3D(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2) {
+    setup(p0, p1, p2);
+}
 
 //--------------------------------------------------------
 void ofxKuGeomTriangle3D::setup(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2) {
     this->p0 = p0;
     this->p1 = p1;
     this->p2 = p2;
-    plane.setup_by_points(p0, p1, p1);
+    plane.setup_by_points(p0, p1, p2);
     glm::vec3 M = (p0 + p1 + p2) / 3;
     glm::vec3 M01 = (p0 + p1) / 2;
     glm::vec3 M12 = (p1 + p2) / 2;
@@ -199,22 +202,21 @@ void ofxKuGeomTriangle3D::setup(const glm::vec3& p0, const glm::vec3& p1, const 
 2. Create 3 planes: (p0, normal=M-(p0+p1)/2), and so on, where M is center of triangle
 and check if p is inside each of the plane
 */
-void ofxKuGeomTriangle3D::cross_line(const ofxKuGeomLine3D& line, glm::vec3& pout, float& t, bool& crossed) const {
+ofxKuGeomLine3D::CrossResult ofxKuGeomTriangle3D::cross_line(const ofxKuGeomLine3D& line) const {
     // Check triangle's plane crosses segment
-    plane.cross_line(line, pout, t, crossed);
-    bool result = (crossed && (t >= 0 && t <= 1));
+    ofxKuGeomLine3D::CrossResult cross = plane.cross_line(line);
+    bool result = (cross.crossed && (cross.t >= 0 && cross.t <= 1));
 
     // Check crossing point is inside triangle
     if (result) {
-        result = plane01.signed_distance(pout) >= 0
-            && plane12.signed_distance(pout) >= 0
-            && plane20.signed_distance(pout) >= 0;
+        result = plane01.signed_distance(cross.p) >= 0
+            && plane12.signed_distance(cross.p) >= 0
+            && plane20.signed_distance(cross.p) >= 0;
     }
     if (!result) {
-        pout = glm::vec3(0, 0, 0);
-        t = 0;
-        crossed = false;
+        return ofxKuGeomLine3D::CrossResult();
     }
+    return cross;
 }
 
 //--------------------------------------------------------
