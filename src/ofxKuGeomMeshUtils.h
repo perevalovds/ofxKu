@@ -24,6 +24,7 @@ void ofxKuCreateWireframe(ofMesh &mesh, ofMesh &mesh_out);	//for triangle mesh
 
 // Remove duplicated vertices - it occurs for IcoPrimitive, for example
 void ofxKuMeshRemoveDuplicates(ofMesh& mesh_in, ofMesh& mesh_out, float eps = 0.001, bool verbose_duplicated = false);
+void ofxKuMeshRemoveDuplicates(ofMesh& mesh, float eps = 0.001, bool verbose_duplicated = false);
 
 // Set normals
 void ofxKuSetNormals(ofMesh &mesh, bool invert = false, bool remove_duplicates = false, float eps = 0.001, bool verbose_duplicated = false);

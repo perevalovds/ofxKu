@@ -255,6 +255,12 @@ void ofxKuMeshShuffle(vector<glm::vec3> &v, vector<ofIndexType> &t, vector<glm::
 }
 
 //--------------------------------------------------------
+void ofxKuMeshRemoveDuplicates(ofMesh& mesh, float eps, bool verbose_duplicated) {
+	ofMesh temp = mesh;
+	ofxKuMeshRemoveDuplicates(temp, mesh, eps, verbose_duplicated);
+}
+
+//--------------------------------------------------------
 // Remove duplicated vertices - it occurs for IcoPrimitive, for example
 void ofxKuMeshRemoveDuplicates(ofMesh& mesh_in, ofMesh& mesh_out, float eps, bool verbose_duplicated) {
 	if (verbose_duplicated) {
