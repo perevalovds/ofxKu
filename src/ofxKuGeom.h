@@ -8,9 +8,13 @@ Structure ofxKuGeomLine2D for working with line in 2D:
  - project point on line,
  - mirror point of line.
 
-Plane:
+Triangle in 3D:
+ - cross line segment and triangle 
+
+Plane in 3D:
  - signed distance from point to plane
  - projection of the point to plane
+ - cross line segment and plane
 
 Point clouds:
  - minimal distance between two point sets
@@ -55,10 +59,15 @@ struct ofxKuGeomLine2D {
 struct ofxKuGeomLine3D {
 	glm::vec3 p0, p1;
 	glm::vec3 dir_unnormalized;
+	bool is_ray = false;	// notification that it's ray from p0
+
 	// Line equation is p0 + t*dir_unnormalized, t in R; for segment t in [0,1]
 	ofxKuGeomLine3D() {}
 	ofxKuGeomLine3D(const glm::vec3& p0, const glm::vec3& p1);
 	void setup(const glm::vec3& p0, const glm::vec3& p1);
+	void setup_ray(const glm::vec3& p0, const glm::vec3& p1);
+
+	bool is_t_valid(float t) const;	// t must be in [0,1] if it's line, and t>=0 for ray
 
 	struct CrossResult {
 		bool crossed = false;
@@ -73,6 +82,7 @@ struct ofxKuGeomPlane {
 	bool setup(const glm::vec3& origin, const glm::vec3& normal, bool normalize = true);
 	bool setup(const glm::vec3& origin, const glm::vec3& vec1, const glm::vec3& vec2);
 	bool setup_by_points(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2);
+	void revert_normal();
 
 	// Signed distance from point to plane
 	float signed_distance(const glm::vec3& point) const;

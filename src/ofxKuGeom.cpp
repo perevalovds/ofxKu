@@ -116,6 +116,18 @@ void ofxKuGeomLine3D::setup(const glm::vec3& p0, const glm::vec3& p1) {
 }
 
 //--------------------------------------------------------
+void ofxKuGeomLine3D::setup_ray(const glm::vec3& p0, const glm::vec3& p1) {
+    setup(p0, p1);
+    is_ray = true;
+}
+
+//--------------------------------------------------------
+bool ofxKuGeomLine3D::is_t_valid(float t) const {	// t must be in [0,1] if it's line, and t>=0 for ray
+    if (is_ray) return (t >= 0);
+    return t >= 0 && t <= 1;
+}
+
+//--------------------------------------------------------
 bool ofxKuGeomPlane::setup(const glm::vec3& origin, const glm::vec3& normal, bool normalize) {
     base = origin;
     norm = normal;
@@ -141,6 +153,11 @@ bool ofxKuGeomPlane::setup(const glm::vec3& origin, const glm::vec3& vec1, const
 //--------------------------------------------------------
 bool ofxKuGeomPlane::setup_by_points(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2) {
     return setup(p0, p1 - p0, p2 - p0);
+}
+
+//--------------------------------------------------------
+void ofxKuGeomPlane::revert_normal() {
+    setup(base, -norm);
 }
 
 //--------------------------------------------------------
@@ -186,26 +203,30 @@ void ofxKuGeomTriangle3D::setup(const glm::vec3& p0, const glm::vec3& p1, const 
     this->p1 = p1;
     this->p2 = p2;
     plane.setup_by_points(p0, p1, p2);
+
+    plane01.setup(p0, glm::cross(plane.norm, p1 - p0));
+    plane12.setup(p0, glm::cross(plane.norm, p2 - p1));
+    plane20.setup(p0, glm::cross(plane.norm, p0 - p2));
     glm::vec3 M = (p0 + p1 + p2) / 3;
-    glm::vec3 M01 = (p0 + p1) / 2;
-    glm::vec3 M12 = (p1 + p2) / 2;
-    glm::vec3 M20 = (p2 + p0) / 2;
-    plane01.setup(M01, M - M01);
-    plane12.setup(M12, M - M12);
-    plane20.setup(M20, M - M20);
+    if (plane01.signed_distance(M) < 0) 
+        plane01.revert_normal();
+    if (plane12.signed_distance(M) < 0)
+        plane12.revert_normal();
+    if (plane20.signed_distance(M) < 0)
+        plane20.revert_normal();
 }
 
 //--------------------------------------------------------
 // Crossing triangle and line, if t in [0,1] it means crossed as segment
 /*
 1. Cross line and triangle's plane
-2. Create 3 planes: (p0, normal=M-(p0+p1)/2), and so on, where M is center of triangle
-and check if p is inside each of the plane
+2. Create 3 planes at side,
+and check if p is inside each of the half-space limited by plane
 */
 ofxKuGeomLine3D::CrossResult ofxKuGeomTriangle3D::cross_line(const ofxKuGeomLine3D& line) const {
     // Check triangle's plane crosses segment
     ofxKuGeomLine3D::CrossResult cross = plane.cross_line(line);
-    bool result = (cross.crossed && (cross.t >= 0 && cross.t <= 1));
+    bool result = (cross.crossed && line.is_t_valid(cross.t));
 
     // Check crossing point is inside triangle
     if (result) {
