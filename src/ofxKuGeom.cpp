@@ -103,6 +103,19 @@ void ofxKuGeomLine2D::draw_rect(float rad) {	//draw quad with "rad" distance
 }
 
 //--------------------------------------------------------
+// Line equation is p0 + t*dir_unnormalized, t in [0,1], 
+ofxKuGeomLine3D::ofxKuGeomLine3D(const glm::vec3& p0, const glm::vec3& p1) {
+    setup(p0, p1);
+}
+
+//--------------------------------------------------------
+void ofxKuGeomLine3D::setup(const glm::vec3& p0, const glm::vec3& p1) {
+    this->p0 = p0;
+    this->p1 = p1;
+    dir_unnormalized = p1 - p0;
+}
+
+//--------------------------------------------------------
 bool ofxKuGeomPlane::setup(const glm::vec3& origin, const glm::vec3& normal, bool normalize) {
     base = origin;
     norm = normal;
@@ -126,14 +139,82 @@ bool ofxKuGeomPlane::setup(const glm::vec3& origin, const glm::vec3& vec1, const
 }
 
 //--------------------------------------------------------
-float ofxKuGeomPlane::signed_distance(const glm::vec3& point) {
+bool ofxKuGeomPlane::setup_by_points(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2) {
+    return setup(p0, p1 - p0, p2 - p0);
+}
+
+//--------------------------------------------------------
+float ofxKuGeomPlane::signed_distance(const glm::vec3& point) const {
     return glm::dot(norm, point) + d;
 }
 
 //--------------------------------------------------------
 // Projection of the point to plane
-glm::vec3 ofxKuGeomPlane::projection(const glm::vec3& point) {
+glm::vec3 ofxKuGeomPlane::projection(const glm::vec3& point) const {
     return point - norm * signed_distance(point);
+}
+
+//--------------------------------------------------------
+// Crossing plane and line, if t in [0,1] it means crossed as segmen
+/*
+line p = a+qt
+plane n*p + d = 0
+n*(a+qt)+d = n*a + n*qt+d = 0
+t = - (n*a+d)/(n*q),  and n*q != 0
+*/
+void ofxKuGeomPlane::cross_line(const ofxKuGeomLine3D& line, glm::vec3& pout, float& t, bool& crossed) const {
+    float n_q = glm::dot(norm, line.dir_unnormalized);
+    if (fabs(n_q) < 0.00001) {      // Not interested in parallel case
+        pout = glm::vec3(0, 0, 0);
+        t = 0;
+        crossed = false;
+        return;
+    }
+    t = -(glm::dot(norm, line.p0) + d) / n_q;
+    pout = line.p0 + line.dir_unnormalized * t;
+    crossed = true;
+}
+
+
+
+//--------------------------------------------------------
+void ofxKuGeomTriangle3D::setup(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2) {
+    this->p0 = p0;
+    this->p1 = p1;
+    this->p2 = p2;
+    plane.setup_by_points(p0, p1, p1);
+    glm::vec3 M = (p0 + p1 + p2) / 3;
+    glm::vec3 M01 = (p0 + p1) / 2;
+    glm::vec3 M12 = (p1 + p2) / 2;
+    glm::vec3 M20 = (p2 + p0) / 2;
+    plane01.setup(M01, M - M01);
+    plane12.setup(M12, M - M12);
+    plane20.setup(M20, M - M20);
+}
+
+//--------------------------------------------------------
+// Crossing triangle and line, if t in [0,1] it means crossed as segment
+/*
+1. Cross line and triangle's plane
+2. Create 3 planes: (p0, normal=M-(p0+p1)/2), and so on, where M is center of triangle
+and check if p is inside each of the plane
+*/
+void ofxKuGeomTriangle3D::cross_line(const ofxKuGeomLine3D& line, glm::vec3& pout, float& t, bool& crossed) const {
+    // Check triangle's plane crosses segment
+    plane.cross_line(line, pout, t, crossed);
+    bool result = (crossed && (t >= 0 && t <= 1));
+
+    // Check crossing point is inside triangle
+    if (result) {
+        result = plane01.signed_distance(pout) >= 0
+            && plane12.signed_distance(pout) >= 0
+            && plane20.signed_distance(pout) >= 0;
+    }
+    if (!result) {
+        pout = glm::vec3(0, 0, 0);
+        t = 0;
+        crossed = false;
+    }
 }
 
 //--------------------------------------------------------

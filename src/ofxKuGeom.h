@@ -24,6 +24,7 @@ Sphere:
 
 #include "ofMain.h"
 
+// Line in 2D
 struct ofxKuGeomLine2D {
 	glm::vec2 p0, p1;
 	glm::vec2 normal;
@@ -50,21 +51,49 @@ struct ofxKuGeomLine2D {
 	void draw_rect(float rad = 0.5);	//draw quad with "rad" distance for creating hi-res shots
 };
 
+// Line in 3D
+struct ofxKuGeomLine3D {
+	glm::vec3 p0, p1;
+	glm::vec3 dir_unnormalized;
+	// Line equation is p0 + t*dir_unnormalized, t in R; for segment t in [0,1]
+	ofxKuGeomLine3D() {}
+	ofxKuGeomLine3D(const glm::vec3& p0, const glm::vec3& p1);
+	void setup(const glm::vec3& p0, const glm::vec3& p1);
+};
+
+
+// Plane in 3D
 struct ofxKuGeomPlane {
 	bool setup(const glm::vec3& origin, const glm::vec3& normal, bool normalize = false);
 	bool setup(const glm::vec3& origin, const glm::vec3& vec1, const glm::vec3& vec2);
+	bool setup_by_points(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2);
 
 	// Signed distance from point to plane
-	float signed_distance(const glm::vec3& point);
+	float signed_distance(const glm::vec3& point) const;
 
 	// Projection of the point to plane
-	glm::vec3 projection(const glm::vec3& point);
+	glm::vec3 projection(const glm::vec3& point) const;
+
+	// Crossing plane and line, if t in [0,1] it means crossed as segment
+	void cross_line(const ofxKuGeomLine3D& line, glm::vec3& pout, float& t, bool& crossed) const;
 
 	glm::vec3 base;
 	glm::vec3 norm;
 	float d = 0;	//dot(norm,p) + d = 0 - equation of the plane
 };
 
+// Triangle in 3D
+struct ofxKuGeomTriangle3D {
+	void setup(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2);
+
+	// Crossing triangle and line, if t in [0,1] it means crossed as segment
+	void cross_line(const ofxKuGeomLine3D& line, glm::vec3& pout, float& t, bool& crossed) const;
+
+	glm::vec3 p0;
+	glm::vec3 p1;
+	glm::vec3 p2;
+	ofxKuGeomPlane plane, plane01, plane12, plane20;
+};
 
 //Minimal distance between two point sets
 float ofxKuPointCloudsDistance(const vector<ofPoint> &A, const vector<ofPoint> &B);

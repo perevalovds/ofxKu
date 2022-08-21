@@ -64,6 +64,7 @@ void ofxKuExportVectorFieldAsAtlasImage(string tif_file_name,
 			}
 		}
 	}
+
 	ofSaveImage(pix, tif_file_name);
 
 }
