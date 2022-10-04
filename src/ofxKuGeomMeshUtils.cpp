@@ -180,12 +180,12 @@ void ofxKuSaveObjFile(ofMesh &mesh, string fileName, bool setupNormals,
 
 	std::cout << "    f..." << endl;
 	for (int i = 0; i < m; i++) {
-		string a = ofToString(ind[i * 3] + 1);
-		string b = ofToString(ind[i * 3 + 1] + 1);
-		string c = ofToString(ind[i * 3 + 2] + 1);
-		a = a + "/" + a + "/" + a;
-		b = b + "/" + b + "/" + b;
-		c = c + "/" + c + "/" + c;
+		string a1 = ofToString(ind[i * 3] + 1);
+		string b1 = ofToString(ind[i * 3 + 1] + 1);
+		string c1 = ofToString(ind[i * 3 + 2] + 1);
+		string a = a1 + "/" + ((textured) ? a1 : "") + ((setupNormals) ? "/"+a1 : "");
+		string b = b1 + "/" + ((textured) ? b1 : "") + ((setupNormals) ? "/" + b1 : "");
+		string c = c1 + "/" + ((textured) ? c1 : "") + ((setupNormals) ? "/" + c1 : "");
 		list[j++] = "f " + a + " " + b + " " + c;
 	}
 
