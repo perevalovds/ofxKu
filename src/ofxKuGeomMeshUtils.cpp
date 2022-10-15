@@ -426,7 +426,7 @@ vector<glm::vec3> ofKuMeshSampleRandomPoints(const ofMesh& mesh, int count)
 		return result;
 	}
 	if (m * 3 != T.size()) {
-		cout << "ERROR at ofKuMeshSampleRandomPoints - not triangle mesh");
+		cout << "ERROR at ofKuMeshSampleRandomPoints - not triangle mesh" << endl;
 		return result;
 	}
 	result.resize(count);
