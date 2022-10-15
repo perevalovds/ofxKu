@@ -432,11 +432,12 @@ vector<glm::vec3> ofKuMeshSampleRandomPoints(const ofMesh& mesh, int count)
 	result.resize(count);
 	for (int i = 0; i < count; i++) {
 		int t = 3*int(ofRandom(m)); // Choose triangle
+		float a, b, c;
 		while (true) {
 			// Choose weights
-			float a = ofRandom(1);
-			float b = ofRandom(1);
-			float c = ofRandom(1);
+			a = ofRandom(1);
+			b = ofRandom(1);
+			c = ofRandom(1);
 			float sum = a + b + c;
 			if (sum > 0.0001) {
 				a /= sum;
@@ -444,9 +445,10 @@ vector<glm::vec3> ofKuMeshSampleRandomPoints(const ofMesh& mesh, int count)
 				c /= sum;
 				break;
 			}
-			result[i] = V[T[t]] * a + V[T[t + 1]] * b + V[T[t + 2]] * c;
 		}
+		result[i] = V[T[t]] * a + V[T[t + 1]] * b + V[T[t + 2]] * c;
 	}
+	return result;
 }
 
 //--------------------------------------------------------
