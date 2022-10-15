@@ -183,7 +183,7 @@ void ofxKuSaveObjFile(ofMesh &mesh, string fileName, bool setupNormals,
 		string a1 = ofToString(ind[i * 3] + 1);
 		string b1 = ofToString(ind[i * 3 + 1] + 1);
 		string c1 = ofToString(ind[i * 3 + 2] + 1);
-		string a = a1 + "/" + ((textured) ? a1 : "") + ((setupNormals) ? "/"+a1 : "");
+		string a = a1 + "/" + ((textured) ? a1 : "") + ((setupNormals) ? "/" + a1 : "");
 		string b = b1 + "/" + ((textured) ? b1 : "") + ((setupNormals) ? "/" + b1 : "");
 		string c = c1 + "/" + ((textured) ? c1 : "") + ((setupNormals) ? "/" + c1 : "");
 		list[j++] = "f " + a + " " + b + " " + c;
@@ -411,6 +411,41 @@ void ofxKuCreateWireframe(ofMesh &mesh, ofMesh &mesh_out) { //for triangle mesh
 void ofxKuMeshTransform(vector<glm::vec3>& v, glm::vec3 translate, glm::vec3 scale) {
 	for (auto& vert : v) {
 		vert = vert * scale + translate;
+	}
+}
+
+//--------------------------------------------------------
+vector<glm::vec3> ofKuMeshSampleRandomPoints(const ofMesh& mesh, int count)
+{
+	vector<glm::vec3> result;
+	auto& V = mesh.getVertices();
+	int n = V.size();
+	auto& T = mesh.getIndices();
+	int m = T.size() / 3;
+	if (n == 0 || m == 0) {
+		return result;
+	}
+	if (m * 3 != T.size()) {
+		cout << "ERROR at ofKuMeshSampleRandomPoints - not triangle mesh");
+		return result;
+	}
+	result.resize(count);
+	for (int i = 0; i < count; i++) {
+		int t = 3*int(ofRandom(m)); // Choose triangle
+		while (true) {
+			// Choose weights
+			float a = ofRandom(1);
+			float b = ofRandom(1);
+			float c = ofRandom(1);
+			float sum = a + b + c;
+			if (sum > 0.0001) {
+				a /= sum;
+				b /= sum;
+				c /= sum;
+				break;
+			}
+			result[i] = V[T[t]] * a + V[T[t + 1]] * b + V[T[t + 2]] * c;
+		}
 	}
 }
 
