@@ -4,7 +4,7 @@
 
 
 //--------------------------------------------------------
-void ofxKuLoadObjFile(ofMesh &mesh, string fileName, bool useTex,
+void ofxKuLoadObjFile(ofMesh& mesh, string fileName, bool useTex,
 	int setupNormals, bool normalize,
 	bool separateFaces, bool shuffle, int texW, int texH//,
    // bool caching_to_ply 
@@ -74,7 +74,7 @@ void ofxKuLoadObjFile(ofMesh &mesh, string fileName, bool useTex,
 			p0 = v[0];
 			p1 = p0;
 			for (int i = 0; i < v.size(); i++) {
-				glm::vec3 &p = v[i];
+				glm::vec3& p = v[i];
 				p0.x = min(p0.x, p.x);
 				p0.y = min(p0.y, p.y);
 				p0.z = min(p0.z, p.z);
@@ -92,7 +92,7 @@ void ofxKuLoadObjFile(ofMesh &mesh, string fileName, bool useTex,
 			scl = 1.0 / scl;
 		}
 		for (int j = 0; j < v.size(); j++) {
-			glm::vec3 &p = v[j];
+			glm::vec3& p = v[j];
 			p = (p - c) * scl;
 		}
 	}
@@ -119,9 +119,9 @@ void ofxKuLoadObjFile(ofMesh &mesh, string fileName, bool useTex,
 	mesh.addIndices(t);
 
 	//normals
-	if (setupNormals) { 
+	if (setupNormals) {
 		bool invert = (setupNormals > 0) ? false : true;
-		ofxKuSetNormals(mesh, invert); 
+		ofxKuSetNormals(mesh, invert);
 	}
 
 	//write
@@ -134,16 +134,16 @@ void ofxKuLoadObjFile(ofMesh &mesh, string fileName, bool useTex,
 }
 
 //--------------------------------------------------------
-void ofxKuSaveObjFile(ofMesh &mesh, string fileName, int setupNormals,
+void ofxKuSaveObjFile(ofMesh& mesh, string fileName, int setupNormals,
 	bool textured, string mtl_file, int texW, int texH) {	//sets normals and so change mesh!
 
-	auto &v = mesh.getVertices();
+	auto& v = mesh.getVertices();
 	int n = v.size();
 
-	auto &vt = mesh.getTexCoords();
-	auto &vn = mesh.getNormals();
+	auto& vt = mesh.getTexCoords();
+	auto& vn = mesh.getNormals();
 
-	vector<GLuint> &ind = mesh.getIndices();
+	vector<GLuint>& ind = mesh.getIndices();
 	int m = ind.size() / 3;
 
 	if (setupNormals) {
@@ -202,7 +202,7 @@ void ofxKuSaveObjFile(ofMesh &mesh, string fileName, int setupNormals,
 
 //--------------------------------------------------------
 //shuffle vertices and triangles
-void ofxKuMeshShuffle(vector<glm::vec3> &v, vector<ofIndexType> &t, vector<glm::vec2> &tex,
+void ofxKuMeshShuffle(vector<glm::vec3>& v, vector<ofIndexType>& t, vector<glm::vec2>& tex,
 	bool useTex, float shuffle_count) {
 
 	int n = v.size();
@@ -328,7 +328,7 @@ void ofxKuMeshRemoveDuplicates(ofMesh& mesh_in, ofMesh& mesh_out, float eps, boo
 }
 //--------------------------------------------------------
 // Set normals
-void ofxKuSetNormals(ofMesh &mesh, bool invert, bool remove_duplicates, float eps, bool verbose_duplicated) {
+void ofxKuSetNormals(ofMesh& mesh, bool invert, bool remove_duplicates, float eps, bool verbose_duplicated) {
 	if (remove_duplicates) {
 		ofMesh mesh2 = mesh;
 		ofxKuMeshRemoveDuplicates(mesh, mesh2, eps, verbose_duplicated);
@@ -353,9 +353,9 @@ void ofxKuSetNormals(ofMesh &mesh, bool invert, bool remove_duplicates, float ep
 		int i3 = mesh.getIndex(3 * t + 2);
 
 		//Get vertices of the triangle
-		const ofPoint &v1 = mesh.getVertex(i1);
-		const ofPoint &v2 = mesh.getVertex(i2);
-		const ofPoint &v3 = mesh.getVertex(i3);
+		const ofPoint& v1 = mesh.getVertex(i1);
+		const ofPoint& v2 = mesh.getVertex(i2);
+		const ofPoint& v3 = mesh.getVertex(i3);
 
 		//Compute the triangle's normal
 		ofPoint dir = -((v2 - v1).crossed(v3 - v1)).normalized();
@@ -380,12 +380,12 @@ void ofxKuSetNormals(ofMesh &mesh, bool invert, bool remove_duplicates, float ep
 }
 
 //--------------------------------------------------------
-void ofxKuCreateWireframe(ofMesh &mesh, ofMesh &mesh_out) { //for triangle mesh
+void ofxKuCreateWireframe(ofMesh& mesh, ofMesh& mesh_out) { //for triangle mesh
 
-	auto &v = mesh.getVertices();
+	auto& v = mesh.getVertices();
 	int n = v.size();
 
-	vector<GLuint> &ind = mesh.getIndices();
+	vector<GLuint>& ind = mesh.getIndices();
 	int m = ind.size() / 3;
 
 	mesh_out = mesh;
@@ -419,9 +419,9 @@ void ofxKuMeshTransform(vector<glm::vec3>& v, glm::vec3 translate, glm::vec3 sca
 }
 
 //--------------------------------------------------------
-vector<glm::vec3> ofKuMeshSampleRandomPoints(const ofMesh& mesh, int count)
+glm::vec3 ofKuMeshSampleRandomPoint(const ofMesh& mesh)
 {
-	vector<glm::vec3> result;
+	glm::vec3 result = glm::vec3(0, 0, 0);
 	auto& V = mesh.getVertices();
 	int n = V.size();
 	auto& T = mesh.getIndices();
@@ -430,28 +430,25 @@ vector<glm::vec3> ofKuMeshSampleRandomPoints(const ofMesh& mesh, int count)
 		return result;
 	}
 	if (m * 3 != T.size()) {
-		cout << "ERROR at ofKuMeshSampleRandomPoints - not triangle mesh" << endl;
+		cout << "ERROR at ofKuMeshSampleRandomPoint - not triangle mesh" << endl;
 		return result;
 	}
-	result.resize(count);
-	for (int i = 0; i < count; i++) {
-		int t = 3*int(ofRandom(m)); // Choose triangle
-		float a, b, c;
-		while (true) {
-			// Choose weights
-			a = ofRandom(1);
-			b = ofRandom(1);
-			c = ofRandom(1);
-			float sum = a + b + c;
-			if (sum > 0.0001) {
-				a /= sum;
-				b /= sum;
-				c /= sum;
-				break;
-			}
+	int t = 3 * int(ofRandom(m)); // Choose triangle
+	float a, b, c;
+	while (true) {
+		// Choose weights
+		a = ofRandom(1);
+		b = ofRandom(1);
+		c = ofRandom(1);
+		float sum = a + b + c;
+		if (sum > 0.0001) {
+			a /= sum;
+			b /= sum;
+			c /= sum;
+			break;
 		}
-		result[i] = V[T[t]] * a + V[T[t + 1]] * b + V[T[t + 2]] * c;
 	}
+	result = V[T[t]] * a + V[T[t + 1]] * b + V[T[t + 2]] * c;
 	return result;
 }
 

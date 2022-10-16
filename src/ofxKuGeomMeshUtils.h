@@ -38,8 +38,8 @@ void ofxKuMeshShuffle( vector<glm::vec3> &v, vector<ofIndexType> &t, vector<glm:
 void ofxKuMeshTransform(vector<glm::vec3>& v, glm::vec3 translate, glm::vec3 scale);
 
 // Get random points from mesh. Applicable to ftirnalge mesh
-// TODO: inside one trianle sampling is not uniform
-vector<glm::vec3> ofKuMeshSampleRandomPoints(const ofMesh& mesh, int count);
+// TODO: inside one triangle sampling is not uniform
+glm::vec3 ofKuMeshSampleRandomPoint(const ofMesh& mesh);
 
 //-------------------------
 
