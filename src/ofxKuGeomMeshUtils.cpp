@@ -5,7 +5,7 @@
 
 //--------------------------------------------------------
 void ofxKuLoadObjFile(ofMesh &mesh, string fileName, bool useTex,
-	bool setupNormals, bool normalize,
+	int setupNormals, bool normalize,
 	bool separateFaces, bool shuffle, int texW, int texH//,
    // bool caching_to_ply 
 )
@@ -119,7 +119,10 @@ void ofxKuLoadObjFile(ofMesh &mesh, string fileName, bool useTex,
 	mesh.addIndices(t);
 
 	//normals
-	if (setupNormals) { ofxKuSetNormals(mesh); }
+	if (setupNormals) { 
+		bool invert = (setupNormals > 0) ? false : true;
+		ofxKuSetNormals(mesh, invert); 
+	}
 
 	//write
 	//if (caching_to_ply)  mesh.save(fileNamePly);
@@ -131,7 +134,7 @@ void ofxKuLoadObjFile(ofMesh &mesh, string fileName, bool useTex,
 }
 
 //--------------------------------------------------------
-void ofxKuSaveObjFile(ofMesh &mesh, string fileName, bool setupNormals,
+void ofxKuSaveObjFile(ofMesh &mesh, string fileName, int setupNormals,
 	bool textured, string mtl_file, int texW, int texH) {	//sets normals and so change mesh!
 
 	auto &v = mesh.getVertices();
@@ -144,7 +147,8 @@ void ofxKuSaveObjFile(ofMesh &mesh, string fileName, bool setupNormals,
 	int m = ind.size() / 3;
 
 	if (setupNormals) {
-		ofxKuSetNormals(mesh);
+		bool invert = (setupNormals > 0) ? false : true;
+		ofxKuSetNormals(mesh, invert);
 	}
 	int N = n + m;
 	if (setupNormals) N += n;
