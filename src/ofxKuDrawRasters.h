@@ -4,7 +4,7 @@
 
 //Drawing rasters
 
-void ofxKuDrawRaster(vector<unsigned char> &pix, int w, int h, float X, float Y, float W, float H, bool nearest_filter, bool rgb = false);
+void ofxKuDrawRaster(vector<unsigned char> &pix, int w, int h, float X, float Y, float W, float H, bool nearest_filter = true, bool rgb = false);
 void ofxKuDrawRaster(vector<float> &pix, int w, int h, float X, float Y, float W, float H, float val0=0, float val1=255,
 	bool nearest_filter = true);
 
