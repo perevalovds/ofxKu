@@ -8,6 +8,11 @@ ofxKuRecorderBinary::ofxKuRecorderBinary() {
 
 //--------------------------------------------------------------
 void ofxKuRecorderBinary::start_rec(string folder) {	//folder must exists
+	bool createDir = ofDirectory::createDirectory(folder, true, true);
+	if (!createDir) {
+		cout << "Can't start recording because can't create folder " << folder << endl;
+		return;
+	}
 	folder_ = folder;
 	recording_ = true;
 	frame_ = 0;
