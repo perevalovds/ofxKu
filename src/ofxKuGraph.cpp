@@ -55,9 +55,9 @@ void ofxKuGraph::draw(float X, float Y, float W, float H,
 	ofFill();
 	ofSetColor(background);
 	ofNoFill();
-	ofRect(0, 0, W, H);
+	ofDrawRectangle(0, 0, W, H);
 	ofSetColor(frame);
-	ofRect(-1, -1, W + 2, H + 2);
+	ofDrawRectangle(-1, -1, W + 2, H + 2);
 	int n = data.size();
 	if (n >= 2) {
 		float scl = 1;
@@ -77,7 +77,7 @@ void ofxKuGraph::draw(float X, float Y, float W, float H,
 
 		ofSetColor(pen);
 		for (int i = 0; i < n-1; i++) {
-			ofLine(i, (data[i]+shift)*scl, i + 1, (data[i + 1]+shift)*scl);
+			ofDrawLine(i, (data[i]+shift)*scl, i + 1, (data[i + 1]+shift)*scl);
 		}
 	}
 

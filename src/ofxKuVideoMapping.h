@@ -5,9 +5,9 @@
 //Using in your project:
 //1.Copy shader's files mapping.frag,mapping.vert from shaders folder of addon 
 //to data/shaders folder of your project
-//2. in ofApp::setup() call:
+//2. in ofAppQDTracker::setup() call:
 //   MAPPING.setup("shaders/mapping")
-//3. in ofApp::draw() call:
+//3. in ofAppQDTracker::draw() call:
 //   MAPPING.draw_texture(...)
 //---------------------------------------------------
 	

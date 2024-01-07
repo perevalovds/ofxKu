@@ -37,30 +37,30 @@ string ofxKuPcManipulate::packToString() {			//for saving somethere
 void ofxKuPcManipulate::update(bool edit) {
 	//scale редактируется всегда, а остальные - если edit
 
-	change_scale(1 + PRM clb_mscl*0.001);
+	change_scale(1 + PRMQD clb_mscl*0.001);
 
 	if (edit) {
-		if (PRM clb_RESET) {
+		if (PRMQD clb_RESET) {
 			reset_main();
 		}
 
 		float mov = 1.0 / 2000.0;
 		float rot = 1.0 / 10.0;
-		move(PRM clb_mx * mov, PRM clb_my * mov, PRM clb_mz * mov);
+		move(PRMQD clb_mx * mov, PRMQD clb_my * mov, PRMQD clb_mz * mov);
 
-		rotate(ofPoint(1, 0, 0), PRM clb_mrotx * rot);
+		rotate(ofPoint(1, 0, 0), PRMQD clb_mrotx * rot);
 
-		rotate(ofPoint(0, 1, 0), PRM clb_mroty * rot);
+		rotate(ofPoint(0, 1, 0), PRMQD clb_mroty * rot);
 
-		rotate(ofPoint(0, 0, 1), PRM clb_mrotz * rot);
+		rotate(ofPoint(0, 0, 1), PRMQD clb_mrotz * rot);
 
-		if (PRM clb_flipX) {
+		if (PRMQD clb_flipX) {
 			change_scale(-1, 1, 1);
 		}
-		if (PRM clb_flipY) {
+		if (PRMQD clb_flipY) {
 			change_scale(1, -1, 1);
 		}
-		if (PRM clb_flipZ) {
+		if (PRMQD clb_flipZ) {
 			change_scale(1, 1, -1);
 		}
 	}
@@ -69,15 +69,15 @@ void ofxKuPcManipulate::update(bool edit) {
 
 //--------------------------------------------------------------
 void ofxKuPcManipulate::update_finish_all() {
-	PRM clb_RESET = 0;
-	PRM clb_mx = PRM clb_my = PRM clb_mz = 0;
-	PRM	clb_mrotx = 0;
-	PRM	clb_mroty = 0;
-	PRM	clb_mrotz = 0;
-	PRM clb_mscl = 0;
-	PRM clb_flipX = 0;
-	PRM clb_flipY = 0;
-	PRM clb_flipZ = 0;
+	PRMQD clb_RESET = 0;
+	PRMQD clb_mx = PRMQD clb_my = PRMQD clb_mz = 0;
+	PRMQD	clb_mrotx = 0;
+	PRMQD	clb_mroty = 0;
+	PRMQD	clb_mrotz = 0;
+	PRMQD clb_mscl = 0;
+	PRMQD clb_flipX = 0;
+	PRMQD clb_flipY = 0;
+	PRMQD clb_flipZ = 0;
 }
 
 
@@ -87,13 +87,13 @@ void ofxKuPcManipulate::draw(vector<ofPoint> &pnt, ofColor color) {
 	float W = ofGetWidth();
 	float H = ofGetHeight();
 	ofPushMatrix();
-	ofTranslate(W / 2 + PRM clb_gui_x * W, H / 2 + PRM clb_gui_y * H);
+	ofTranslate(W / 2 + PRMQD clb_gui_x * W, H / 2 + PRMQD clb_gui_y * H);
 	
-	float scale = PRM clb_gui_scl * ofToFloat(PRM clb_gui_scl2);
+	float scale = PRMQD clb_gui_scl * ofToFloat(PRMQD clb_gui_scl2);
 	float scl = scale;// *H / 1080.0;
 	ofScale(scl, scl, scl);
 
-	int proj = PRM clb_proj; //XY, XZ, YZ, Custom
+	int proj = PRMQD clb_proj; //XY, XZ, YZ, Custom
 	if (proj == 1) {		//XY
 		ofScale(1, 1, 0.001);	//TODO do real orthographic
 	}
@@ -107,9 +107,9 @@ void ofxKuPcManipulate::draw(vector<ofPoint> &pnt, ofColor color) {
 		ofScale(0.001, 1, 1);	//TODO do real orthographic		
 	}
 	if (proj == 4) {		//Custom
-		ofRotateX(PRM clb_rotx);
-		ofRotateY(PRM clb_roty);
-		ofRotateZ(PRM clb_rotz);
+		ofRotateX(PRMQD clb_rotx);
+		ofRotateY(PRMQD clb_roty);
+		ofRotateZ(PRMQD clb_rotz);
 	}
 
 	ofMesh mesh;
@@ -125,20 +125,20 @@ void ofxKuPcManipulate::draw(vector<ofPoint> &pnt, ofColor color) {
 	ofNoFill();
 	ofSetCircleResolution(60);
 	//ofCircle(0, 0, 1);
-	float rx = PRM clb_w / 2;
-	float ry = PRM clb_h / 2;
+	float rx = PRMQD clb_w / 2;
+	float ry = PRMQD clb_h / 2;
 	ofLine(-rx, 0, 0, rx, 0, 0);
 	ofLine(0, -ry, 0, 0, ry, 0);
-	ofLine(0, 0, 0, 0, 0, PRM clb_Z);
+	ofLine(0, 0, 0, 0, 0, PRMQD clb_Z);
 
-	ofLine(-rx, 0, PRM clb_Z, rx, 0, PRM clb_Z);
-	ofLine(0, -ry, PRM clb_Z, 0, ry, PRM clb_Z);
+	ofLine(-rx, 0, PRMQD clb_Z, rx, 0, PRMQD clb_Z);
+	ofLine(0, -ry, PRMQD clb_Z, 0, ry, PRMQD clb_Z);
 
-	ofRect(-PRM clb_w / 2, -PRM clb_h / 2, PRM clb_w, PRM clb_h);
-	ofLine(-PRM clb_w / 2, 0, 0, -PRM clb_w / 2, 0, PRM clb_Z);
-	ofLine(PRM clb_w / 2, 0, 0, PRM clb_w / 2, 0, PRM clb_Z);
-	ofLine(0, -PRM clb_h / 2, 0, 0, -PRM clb_h / 2, PRM clb_Z);
-	ofLine(0, PRM clb_h / 2, 0, 0, PRM clb_h / 2, PRM clb_Z);
+	ofRect(-PRMQD clb_w / 2, -PRMQD clb_h / 2, PRMQD clb_w, PRMQD clb_h);
+	ofLine(-PRMQD clb_w / 2, 0, 0, -PRMQD clb_w / 2, 0, PRMQD clb_Z);
+	ofLine(PRMQD clb_w / 2, 0, 0, PRMQD clb_w / 2, 0, PRMQD clb_Z);
+	ofLine(0, -PRMQD clb_h / 2, 0, 0, -PRMQD clb_h / 2, PRMQD clb_Z);
+	ofLine(0, PRMQD clb_h / 2, 0, 0, PRMQD clb_h / 2, PRMQD clb_Z);
 
 	ofPopMatrix();
 
@@ -164,13 +164,13 @@ void ofxKuPcManipulate::transform(vector<ofPoint> &points_in, vector<ofPoint> &p
 	}
 
 	//удаление точек вне слоя
-	if (PRM clipping) {
+	if (PRMQD clipping) {
 		//cout << n << " ... ";
-		float radx = PRM clb_w / 2;
-		float rady = PRM clb_h / 2;
+		float radx = PRMQD clb_w / 2;
+		float rady = PRMQD clb_h / 2;
 		for (int i = 0; i < n; ) {
 			ofPoint &p = points_out[i];
-			if (p.z < 0 || p.z > PRM clb_Z || p.x < -radx || p.x > radx || p.y < -rady || p.y > rady) {
+			if (p.z < 0 || p.z > PRMQD clb_Z || p.x < -radx || p.x > radx || p.y < -rady || p.y > rady) {
 				swap(points_out[i], points_out[n - 1]);
 				n--;
 			}

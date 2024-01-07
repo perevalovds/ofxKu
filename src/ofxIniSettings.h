@@ -14,8 +14,13 @@ Version: 0.1
 
 ************************************************************/
 
+//#include <conio.h>
+#include <fstream>
+#include <iostream>
+#include <map>
 
 #include "ofMain.h"
+//#include "ofxVectorMath.h"
 
 class ofxIniSettings {
 public:
@@ -29,6 +34,7 @@ public:
     void clear();
 
     map<string,string> keys;
+    string inputFilename;
     string outputFilename;
 
     //getters
@@ -36,6 +42,19 @@ public:
     bool get(string key, bool defaultValue);
     float get(string key, float defaultValue);
     string get(string key, string defaultValue);
+    
+    // getters which requires value
+    int getInt(const string& key);
+    float getFloat(const string& key);
+    string getString(const string& key);
+
+    // getters with option load from several keys
+    // for example: getInt( {"Specific.Value1", "Common.Value1"} )
+    int getInt(const vector<string>& keys);
+    float getFloat(const vector<string>& keys);
+    string getString(const vector<string>& keys);
+
+
     //ofxVec2f get(string key, ofxVec2f defaultValue);
     //ofxVec3f get(string key, ofxVec3f defaultValue);
     //ofxVec4f get(string key, ofxVec4f defaultValue);

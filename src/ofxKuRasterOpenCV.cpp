@@ -102,7 +102,9 @@ void ofxKuRasterFieldDirection( vector<float> &energy, int w, int h, int step, v
 }
 */
 //-------------------------------------------------------------
-/*void ofxKuRasterConvexHull( vector<unsigned char> &input, vector<unsigned char> &output, int w, int h, int threshold ) {
+void ofxKuRasterConvexHull( vector<unsigned char> &input, vector<unsigned char> &output, int w, int h, int threshold ) {
+
+
 
 	output.resize(w*h);
 	fill(output.begin(), output.end(), 0);
@@ -123,7 +125,11 @@ void ofxKuRasterFieldDirection( vector<float> &energy, int w, int h, int step, v
 	if (n>0) {
 		vector<int> hull(n);
 		int hullsize = n;
-		cvConvexHull( &contour[0], n, 0, CV_COUNTER_CLOCKWISE, &hull[0], &hullsize );
+
+		// TODO
+		DebugBreak();
+//		cvConvexHull( &contour[0], n, 0, CV_COUNTER_CLOCKWISE, &hull[0], &hullsize );
+		//cvConvexHull2( &contour[0], n, 0, CV_COUNTER_CLOCKWISE, &hull[0], &hullsize );
 
 		//debug draw
 		//for (int i=0; i<hullsize; i++) {
@@ -145,13 +151,13 @@ void ofxKuRasterFieldDirection( vector<float> &energy, int w, int h, int step, v
 		img.set(0);
 		cvFillConvexPoly(img.getCvImage(), &convex[0], hullsize, cvScalar(255));
     
-		unsigned char *imgData = img.getPixels();
+		unsigned char *imgData = img.getPixels().getData();
 		for (int i=0; i<w*h; i++) {
 			output[i] = imgData[i];
 		}	
 	}
 }
-*/
+
 
 //-------------------------------------------------------------
 void ofxKuOpticalFlowFarneback(ofPixels &pix_gray1, ofPixels &pix_gray2, float scale, vector<ofVec2f> &flow_out, int &w, int &h) {

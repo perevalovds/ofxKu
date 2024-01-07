@@ -1,15 +1,12 @@
 #include "ofxIniSettings.h"
 
+#include "kuErrors.h"
 /*
-ofxIniSettings - Released 22-1-2009 - by Rick Companje
-
-Installation:
-- Follow the regular openFrameworks methods for adding addons.
+Based on ofxIniSettings by Rick Companje Released 22-1-2009
 
 Notes:
 - Have a look at the functions I copied from my ofxExtra addon
   like ofFileExists, ofSplitString and a lot of casting functions like ofToBoolean
-
 
 Example Usage:
 
@@ -59,14 +56,6 @@ window=0,0,1024,768
 
 
 /* These functions are from my ofxExtras */
-int die(string str) {
-    cout << str.c_str() << endl;
-    //_getch();
-	ofSleepMillis( 1000 );
-	OF_EXIT_APP(1);
-    //std::exit(1);
-}
-
 bool ofFileExists(string filename) { //rick	
 	ifstream inp;
 	inp.open(filename.c_str(), ifstream::in);
@@ -74,18 +63,73 @@ bool ofFileExists(string filename) { //rick
 	return !inp.fail();
 }
 
+int ofToInteger(string str) { //rick
+    //works also for hex: 0xff0000....
+    istringstream stream(str);
+    stream.unsetf(ios_base::dec);
+    int result; stream >> result; return result;
+}
+
+/*float ofToFloat(string str) { //rick 3-1-2008, updated: 1-5-2008
+	istringstream stream(str);
+    float result; stream >> result; return result;
+}*/
+
 bool ofToBoolean(string str) { //rick 3-1-2008
 	return str=="true" || str=="True" || str=="TRUE" || str=="1";
 }
 
+vector<string> ofSplitString(string str, string delim=",") {
+    vector<string> results;
+    int cut;
+    while ((cut=str.find_first_of(delim))!=string::npos) {
+        if (cut>0) results.push_back(str.substr(0,cut));
+        str = str.substr(cut+1);
+    }
+    if (str.length()>0) results.push_back(str);
+    return results;
+}
 
+/*ofxVec2f ofToVec2f(string str) {
+    vector <string> v = ofSplitString(str);
+    if (v.size()==1) return ofxVec2f(ofToFloat(v[0]),ofToFloat(v[0])); ///is dit gewenst?
+    if (v.size()!=2) return ofxVec2f(0,0);
+    else return ofxVec2f(ofToFloat(v[0]),ofToFloat(v[1]));
+}
+
+ofxVec3f ofToVec3f(string str) {
+    vector <string> v = ofSplitString(str);
+    if (v.size()==1) return ofxVec3f(ofToFloat(v[0]),ofToFloat(v[0]),ofToFloat(v[0])); ///is dit gewenst? .5 wordt dus (.5,.5,.5) wordt oa gebruikt voor scale.
+    if (v.size()!=3) return ofxVec3f(0,0,0);
+    else return ofxVec3f(ofToFloat(v[0]),ofToFloat(v[1]),ofToFloat(v[2]));
+}
+
+ofxVec3f ofToVec3f(float *a) {
+    return ofxVec3f(a[0],a[1],a[2]);
+}
+
+ofxVec4f ofToVec4f(string str) {
+    vector <string> v = ofSplitString(str);
+    if (v.size()!=4) return ofxVec4f(0,0,0,0);
+    else return ofxVec4f(ofToFloat(v[0]),ofToFloat(v[1]),ofToFloat(v[2]),ofToFloat(v[3]));
+}
+
+ofRectangle ofToRectangle(ofxVec4f v) {
+    return ofRectangle(v.x,v.y,v.z,v.w);
+}
+
+ofRectangle ofToRectangle(string str) {
+    return ofToRectangle(ofToVec4f(str));
+}
+*/
 
 bool ofxIniSettings::load(string filename, bool clearFirst) {
-    filename = ofToDataPath(filename);
-    if (filename=="") die("ofxIniSettings::no filename");
+    inputFilename = filename;
+    //filename = ofToDataPath(filename);
+    if (filename=="") kuExit("ofxIniSettings::no filename");
     if (!ofFileExists(filename)) {
 		//cout << "file not found: " + filename << endl; 
-		die ("file not found: " + filename);
+        kuExit("file not found: " + filename);
 	}
 
     string cmd,section,key,value,id;
@@ -127,19 +171,68 @@ void ofxIniSettings::clear() {
 }
 
 string   ofxIniSettings::get(string key, string   defaultValue) { return has(key) ? keys[key] : defaultValue; }
-int      ofxIniSettings::get(string key, int      defaultValue) { return has(key) ? ofToInt(keys[key]) : defaultValue; }
+int      ofxIniSettings::get(string key, int      defaultValue) { return has(key) ? ofToInteger(keys[key]) : defaultValue; }
 float    ofxIniSettings::get(string key, float    defaultValue) { return has(key) ? ofToFloat(keys[key]) : defaultValue; }
 bool     ofxIniSettings::get(string key, bool     defaultValue) { return has(key) ? ofToBoolean(keys[key]) : defaultValue; }
+
+int ofxIniSettings::getInt(const string& key)
+{
+    kuAssertWarning(has(key), "INI error at " + inputFilename + ": Expected int value '" + key + "'");
+    return ofToInteger(keys[key]);
+}
+
+float ofxIniSettings::getFloat(const string& key)
+{
+    kuAssertWarning(has(key), "INI error at " + inputFilename + ": Expected float value '" + key + "'");
+    return ofToFloat(keys[key]);
+}
+
+string ofxIniSettings::getString(const string& key)
+{
+    kuAssertWarning(has(key), "INI error at " + inputFilename + ": Expected string value '" + key + "'");
+    return keys[key];
+}
+
+int ofxIniSettings::getInt(const vector<string>& keys)
+{
+    for (auto& key : keys) {
+        if (has(key)) 
+            return ofToInteger(this->keys[key]);
+    }
+    kuAssertWarning(false, "INI error at " + inputFilename + ": Expected int value from any of keys '" + ofJoinString(keys,",") + "'");
+    return 0;
+}
+
+float ofxIniSettings::getFloat(const vector<string>& keys)
+{
+    for (auto& key : keys) {
+        if (has(key))
+            return ofToFloat(this->keys[key]);
+    }
+    kuAssertWarning(false, "INI error at " + inputFilename + ": Expected float value from any of keys '" + ofJoinString(keys, ",") + "'");
+    return 0.f;
+}
+
+string ofxIniSettings::getString(const vector<string>& keys)
+{
+    for (auto& key : keys) {
+        if (has(key))
+            return this->keys[key];
+    }
+    kuAssertWarning(false, "INI error at " + inputFilename + ": Expected string value from any of keys '" + ofJoinString(keys, ",") + "'");
+    return "";
+}
+
 //ofxVec2f ofxIniSettings::get(string key, ofxVec2f defaultValue) { return has(key) ? ofToVec2f(keys[key]) : defaultValue; }
 //ofxVec3f ofxIniSettings::get(string key, ofxVec3f defaultValue) { return has(key) ? ofToVec3f(keys[key]) : defaultValue; }
 //ofxVec4f ofxIniSettings::get(string key, ofxVec4f defaultValue) { return has(key) ? ofToVec4f(keys[key]) : defaultValue; }
 //ofRectangle ofxIniSettings::get(string key, ofRectangle defaultValue) { return has(key) ? ofToRectangle(keys[key]) : defaultValue; }
 
 void ofxIniSettings::setString(string newID, string newValue) {
-    if (outputFilename=="") die("ofxIniSettings::setString: outputFilename undefined");
+    if (outputFilename=="") kuExit("ofxIniSettings::setString: outputFilename undefined");
     bool foundKey = false;
     //outputFilename = ofToDataPath(outputFilename);
-    if (!ofFileExists(outputFilename)) die("ofxIniSettings::setString: file not found: " + outputFilename);
+    if (!ofFileExists(outputFilename)) kuExit("ofxIniSettings::setString: file not found: " + outputFilename);
     string cmd,section,key,value,id;
     ifstream fileInput(outputFilename.c_str(),ios::in);
     vector<string> lines;
@@ -185,7 +278,7 @@ void ofxIniSettings::setString(string newID, string newValue) {
     fileInput.close();
 
 	if (!foundKey) {
-		//die("ofxIniSettings: Key '"+newID+"' should exist in '"+outputFilename+"'");
+		//kuExit("ofxIniSettings: Key '"+newID+"' should exist in '"+outputFilename+"'");
 		lines.push_back("[" + newSection + "]");
 		lines.push_back( newKey + "=" + newValue );
 	}

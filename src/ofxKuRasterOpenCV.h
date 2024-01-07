@@ -17,7 +17,7 @@ void ofxKuRasterFieldDirection( vector<float> &energy, int w, int h, int step, v
 void ofxKuOpticalFlowFarneback(ofPixels &pix_gray1, ofPixels &pix_gray2, float scale, vector<ofVec2f> &flow_out, int &w, int &h);
 
 //Convex hull
-//void ofxKuRasterConvexHull( vector<unsigned char> &input, vector<unsigned char> &output, int w, int h, int threshold );
+void ofxKuRasterConvexHull( vector<unsigned char> &input, vector<unsigned char> &output, int w, int h, int threshold );
 
 //Заполняет нулевые направления в accum значениями из source
 //void pbCombineFieldDirection( vector<ofPoint> &accum, int w, int h, vector<ofPoint> &source, int ws, int hs  );

@@ -143,7 +143,7 @@ void ofxKuRasterOptFlow::draw(float x0, float y0, float w0, float h0,
 			for (int x=0; x<w_; x+=step) {
 				int i = x + w_*y;
 				if (fabs(flowX_[i])>0 && fabs(flowY_[i])>0) {
-					ofLine(x, y, x+flowX_[i]*amp, y+flowY_[i]*amp);
+					ofDrawLine(x, y, x+flowX_[i]*amp, y+flowY_[i]*amp);
 				}
 			}
 		}
