@@ -9,6 +9,12 @@
 #define KU_DEBUG_BREAK {}
 #endif
 
+#define kuFail( message ) \
+{ cout << "CRITICAL ERROR: " << message << endl; ofSystemAlertDialog( message ); __debugbreak(); OF_EXIT_APP(0); }
+
+#define kuExit( message ) \
+{ cout << "EXITING: " << message << endl; ofSystemAlertDialog( message ); OF_EXIT_APP(0); }
+
 #define kuAssertWarning( val, message ) \
 { if (!(val)) { \
     cout << "WARNING: " << message << endl; \
@@ -18,7 +24,6 @@
 }
 
 #define kuAssertCritical( val, message ) \
-{ if (!(val)) { cout << "CRITICAL ERROR: " << message << endl; ofSystemAlertDialog( message ); __debugbreak(); OF_EXIT_APP(0); } }
+{ if (!(val)) kuFail(message); }
 
-#define kuExit( message ) \
-{ cout << "EXITING: " << message << endl; ofSystemAlertDialog( message ); OF_EXIT_APP(0); }
+

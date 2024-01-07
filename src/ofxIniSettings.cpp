@@ -126,10 +126,10 @@ ofRectangle ofToRectangle(string str) {
 bool ofxIniSettings::load(string filename, bool clearFirst) {
     inputFilename = filename;
     //filename = ofToDataPath(filename);
-    if (filename=="") kuExit("ofxIniSettings::no filename");
+    if (filename=="") kuFail("ofxIniSettings::no filename");
     if (!ofFileExists(filename)) {
 		//cout << "file not found: " + filename << endl; 
-        kuExit("file not found: " + filename);
+        kuFail("file not found: " + filename);
 	}
 
     string cmd,section,key,value,id;
@@ -238,10 +238,10 @@ string ofxIniSettings::getString(const vector<string>& keys)
 //ofRectangle ofxIniSettings::get(string key, ofRectangle defaultValue) { return has(key) ? ofToRectangle(keys[key]) : defaultValue; }
 
 void ofxIniSettings::setString(string newID, string newValue) {
-    if (outputFilename=="") kuExit("ofxIniSettings::setString: outputFilename undefined");
+    if (outputFilename=="") kuFail("ofxIniSettings::setString: outputFilename undefined");
     bool foundKey = false;
     //outputFilename = ofToDataPath(outputFilename);
-    if (!ofFileExists(outputFilename)) kuExit("ofxIniSettings::setString: file not found: " + outputFilename);
+    if (!ofFileExists(outputFilename)) kuFail("ofxIniSettings::setString: file not found: " + outputFilename);
     string cmd,section,key,value,id;
     ifstream fileInput(outputFilename.c_str(),ios::in);
     vector<string> lines;
@@ -287,7 +287,7 @@ void ofxIniSettings::setString(string newID, string newValue) {
     fileInput.close();
 
 	if (!foundKey) {
-		//kuExit("ofxIniSettings: Key '"+newID+"' should exist in '"+outputFilename+"'");
+		//kuFail("ofxIniSettings: Key '"+newID+"' should exist in '"+outputFilename+"'");
 		lines.push_back("[" + newSection + "]");
 		lines.push_back( newKey + "=" + newValue );
 	}
