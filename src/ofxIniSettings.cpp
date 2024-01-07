@@ -177,19 +177,28 @@ bool     ofxIniSettings::get(string key, bool     defaultValue) { return has(key
 
 int ofxIniSettings::getInt(const string& key)
 {
-    kuAssertWarning(has(key), "INI error at " + inputFilename + ": Expected int value '" + key + "'");
+    if (!has(key)) {
+        kuAssertWarning(false, "INI error at " + inputFilename + ": Expected int value '" + key + "'");
+        return 0;
+    }
     return ofToInteger(keys[key]);
 }
 
 float ofxIniSettings::getFloat(const string& key)
 {
-    kuAssertWarning(has(key), "INI error at " + inputFilename + ": Expected float value '" + key + "'");
+    if (!has(key)) {
+        kuAssertWarning(false, "INI error at " + inputFilename + ": Expected float value '" + key + "'");
+        return 0.f;
+    }
     return ofToFloat(keys[key]);
 }
 
 string ofxIniSettings::getString(const string& key)
 {
-    kuAssertWarning(has(key), "INI error at " + inputFilename + ": Expected string value '" + key + "'");
+    if (!has(key)) {
+        kuAssertWarning(false, "INI error at " + inputFilename + ": Expected string value '" + key + "'");
+        return "";
+    }
     return keys[key];
 }
 
