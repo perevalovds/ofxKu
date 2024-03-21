@@ -1,7 +1,7 @@
 #include "ofxKuFile.h"
 
 //--------------------------------------------------------------------------------
-bool ofxKuFileExists(string fileName, bool use_data_path)
+bool ofxKuFileExists( string fileName, bool use_data_path)
 {
 	if (use_data_path) fileName = ofToDataPath(fileName);
 	ifstream inp;
@@ -11,37 +11,77 @@ bool ofxKuFileExists(string fileName, bool use_data_path)
 }
 
 //--------------------------------------------------------------------------------
-int ofxKuFileSize(string fileName, bool use_data_path)
+int ofxKuFileSize( string fileName, bool use_data_path)
 {
 	if (!ofxKuFileExists(fileName, use_data_path)) {
 		return 0;
 	}
 	if (use_data_path) fileName = ofToDataPath(fileName);
-	FILE* file = fopen(fileName.c_str(), "rb");
-	fseek(file, 0, SEEK_END);
-	int size = ftell(file);	//TODO use size_t for big files
-	fclose(file);
+	FILE *file = fopen( fileName.c_str(), "rb" );
+	fseek( file, 0, SEEK_END );
+	int size = ftell( file );	//TODO use size_t for big files
+	fclose( file );
 	return size;
 }
 
+//--------------------------------------------------
+bool ofxKuFileSaveArray(FILE* file, void* arr, size_t size) { //запись массива в файл, блоками
+	unsigned char* data = (unsigned char *)arr;
+	//fwrite( arr, 1, size, file );
+	size_t block = 50 * 1000 * 1000;   //размер блока
+	bool print = (size > 2 * block);
+	size_t k = 0;
+	while (k < size) {
+		size_t k1 = min(k + block, size);
+		fwrite(data + k, 1, k1 - k, file);
+		if (ferror(file)) {
+			return false;
+		}
+		k = k1;
+		//if (print) {
+		//	kuLog << " " << int(double(k) / size * 100) << "%" << endl;
+		//}
+	}
+	return true;
+}
+
+//--------------------------------------------------
+bool ofxKuFileLoadArray(FILE* file, void* arr, size_t size) {  //считывание массива из файла, блоками
+	unsigned char* data = (unsigned char*)arr;
+	//fwrite( arr, 1, size, file );
+	size_t block = 100 * 1000 * 1000;   //размер блока
+	bool print = (size > 2 * block);
+	size_t k = 0;
+	while (k < size) {
+		size_t k1 = min(k + block, size);
+		fread(data + k, 1, k1 - k, file);
+		if (ferror(file)) {
+			return false;
+		}
+
+		k = k1;
+		//if (print) {
+		//	kuLog << " " << int(double(k) / size * 100) << "%" << endl;
+		//}
+	}
+	//if ( print ) {
+	//    kuLog << endl;
+	//}
+}
+
 //--------------------------------------------------------------------------------
-vector<string> ofxKuFileReadStrings(string fileName, bool use_data_path)
+vector<string> ofxKuFileReadStrings( string fileName, bool use_data_path)
 {
 	if (use_data_path) fileName = ofToDataPath(fileName);
 	vector<string> list;
-	if (ofxKuFileExists(fileName, use_data_path)) {
-		ifstream f(fileName.c_str(), ios::in);
+	if ( ofxKuFileExists( fileName, use_data_path) ) {
+		ifstream f(fileName.c_str(),ios::in);
 		string line;
-
-		//Linux: remove "CR"
-		string CR = " ";
-		CR[0] = 13;
-		while (getline(f, line)) {
-			ofStringReplace(line, CR, "");
-			list.push_back(line);
+		while (getline(f,line)) {
+			list.push_back( line );
 		}
-	}
-	return list;
+	}                              
+	return list;                   
 }
 
 //--------------------------------------------------------------------------------
@@ -52,20 +92,18 @@ string ofxKuFileReadString(string file_name, bool use_data_path) {
 }
 
 //--------------------------------------------------------------------------------
-bool ofxKuFileWriteStrings(const vector<string>& list, string fileName, bool use_data_path, bool append) {
+bool ofxKuFileWriteStrings( const vector<string> &list, string fileName, bool use_data_path, bool append) {
 	if (use_data_path) fileName = ofToDataPath(fileName);
 
-	ofstream f;
-	if (append) f = ofstream(fileName.c_str(), ios::out | ios::app);
-	else f = ofstream(fileName.c_str(), ios::out);
-	for (int i = 0; i < list.size(); i++) {
+	ofstream f(fileName.c_str(),ios::out | ((append)?ios::app : 0));
+	for ( int i=0; i<list.size(); i++ ) {
 		f << list[i] << endl;
 	}
 	return true;
 }
 
 //--------------------------------------------------------------------------------
-bool ofxKuFileWriteString(const string& line, string fileName, bool use_data_path, bool append) {
+bool ofxKuFileWriteString(const string &line, string fileName, bool use_data_path, bool append) {
 	vector<string> file;
 	file.push_back(line);
 	return ofxKuFileWriteStrings(file, fileName, use_data_path, append);
@@ -79,8 +117,8 @@ bool ofxKuFileWriteString(const string& line, string fileName, bool use_data_pat
 	for (int i=0; i<list.size(); i++) {
 		string s = Converter::filterString( list[i] );
 		if ( s != "" ) {
-			res.push_back( s );
-		}
+			res.push_back( s ); 
+		}	
 	}
 	return res;
 }
@@ -143,9 +181,9 @@ string pbFiles::getExtension( const string &fileName, bool lowerCase )
 	string result = "";
 	std::string::size_type idx;
 	idx = fileName.rfind('.');
-	if(idx != std::string::npos){
-		result = fileName.substr(idx+1);
-	}
+    if(idx != std::string::npos){
+        result = fileName.substr(idx+1);
+    }
 	if ( lowerCase ) {
 		 transform( result.begin(), result.end(), result.begin(), ::tolower );
 	}
@@ -161,7 +199,7 @@ vector<pbFiles::PairFloat> pbFiles::readPairs( const string &fileName )
 		vector<string> line = Parsing::split( Converter::filterString( sv[i] ), "=" );
 		if ( line.size() >= 2 ) {
 			res.push_back( pbFiles::PairFloat( line[0], Converter::strToDouble( line[1] ) ) );
-		}
+		}		
 	}
 	return res;
 }
