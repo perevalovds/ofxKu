@@ -60,13 +60,14 @@ bool ofxKuFileLoadArray(FILE* file, void* arr, size_t size) {  //считывание масс
 		}
 
 		k = k1;
-		//if (print) {
-		//	kuLog << " " << int(double(k) / size * 100) << "%" << endl;
-		//}
+		if (print) {
+			cout << " " << int(double(k) / size * 100) << "%" << endl;
+		}
 	}
-	//if ( print ) {
-	//    kuLog << endl;
-	//}
+	if (print) {
+		cout << endl;
+	}
+	return true;
 }
 
 //--------------------------------------------------------------------------------
