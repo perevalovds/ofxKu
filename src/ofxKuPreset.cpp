@@ -28,14 +28,20 @@ void ofxKuPreset::name_to_map(string name, int i) {
 }
 
 //--------------------------------------------------------------
-void ofxKuPreset::load(string file_name) {
+bool ofxKuPreset::load(string file_name) {	
+	bool result = true;
 	vector<string> file = ofxKuFileReadStrings(file_name);
+	if (file.empty()) {
+		cout << "Error loading presets from " + file_name << endl;
+		result = false;
+	}
 	int n = file.size()/2;
 	preset_.resize(n);
 	for (int i=0; i<n; i++) {
 		preset_[i] = file[i*2+1];
 	}
 	file_name_ = file_name;
+	return result;
 }
 
 //--------------------------------------------------------------
