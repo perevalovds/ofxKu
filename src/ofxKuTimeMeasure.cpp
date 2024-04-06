@@ -1,8 +1,28 @@
 #include "ofxKuTimeMeasure.h"
 
 //--------------------------------------------------------------
-void ofxKuTimeMeasure::start() {
+void ofxKuTimeMeasure::start(MeasureMode mode) {
 	time_ = ofGetElapsedTimef();
+	measureMode_ = mode;
+}
+
+//--------------------------------------------------------------
+void ofxKuTimeMeasure::startSeconds() {
+	start(MeasureMode::Seconds);
+}
+
+//--------------------------------------------------------------
+void ofxKuTimeMeasure::startMilliSeconds() {
+	start(MeasureMode::MilliSeconds);
+}
+
+//--------------------------------------------------------------
+inline float ofxKuTimeMeasure::secondsToOutput(const float& sec)
+{
+	if (measureMode_ == MeasureMode::Seconds)
+		return sec;
+	else
+		return sec * 1000.f;
 }
 
 //--------------------------------------------------------------
@@ -10,7 +30,7 @@ float ofxKuTimeMeasure::measure() {
 	float time = ofGetElapsedTimef();
 	float result = time - time_;
 	time_ = time;
-	return result;
+	return secondsToOutput(result);
 }
 
 //--------------------------------------------------------------
