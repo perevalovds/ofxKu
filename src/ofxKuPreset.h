@@ -7,8 +7,8 @@
 
 struct ofxKuPreset {
     ofxKuPreset();
-    void add_int(string name, int *var);
-	void add_float(string name, float *var);
+    void add_int(string name, int *var, int defValue);
+	void add_float(string name, float *var, float defValue);
 
 	bool load(string file_name);
 	void save(string file_name);
@@ -27,29 +27,32 @@ struct ofxKuPreset {
 
 	struct Var {
 		string name;
-		int *vari;
-		float *varf;
-		double trans0, trans1;	//for transition
-		
-		Var() {
-			vari = 0;
-			varf = 0;
-			trans0 = 0;
-			trans1 = 0;
-		}
-		Var(string name0, int *vari0) {
+		int *vari = nullptr;
+		float *varf = nullptr;
+
+		int defaulti = 0;
+		float defaultf = 0.;
+		//for transition
+		double trans0 = 0;
+		double trans1 = 0;	
+
+		Var(string name0, int *vari0, int defValuei) {
 			name = name0;
 			vari = vari0;
 			varf = 0;
 			trans0 = *vari;
 			trans1 = *vari;
+
+			defaulti = defValuei;
 		}
-		Var(string name0, float *varf0) {
+		Var(string name0, float *varf0, float defValuef) {
 			name = name0;
 			vari = 0;
 			varf = varf0;
 			trans0 = *varf;
 			trans1 = *varf;
+
+			defaultf = defValuef;
 		}
 		double value() {
 			if (varf) return *varf;
@@ -59,6 +62,10 @@ struct ofxKuPreset {
 		void set_value(double v) {
 			if (varf) *varf = v;
 			if (vari) *vari = v;
+		}
+		void set_default() {
+			if (varf) *varf = defaultf;
+			if (vari) *vari = defaulti;
 		}
 		void trans_start(double to) {
 			trans0 = value();
@@ -81,7 +88,7 @@ private:
 	string file_name_;
 
 	Var *findVar(const string &name);
-	map<string, int> var_map_;
+	unordered_map<string, int> var_map_;
 	void name_to_map(string name, int i);
 
 

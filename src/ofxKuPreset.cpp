@@ -11,14 +11,14 @@ ofxKuPreset::ofxKuPreset() {
 }
 
 //--------------------------------------------------------------
-void ofxKuPreset::add_int(string name, int *var) {
-	var_.push_back(Var(name, var));
+void ofxKuPreset::add_int(string name, int *var, int defValue) {
+	var_.push_back(Var(name, var, defValue));
 	name_to_map(name, var_.size()-1);
 }
 
 //--------------------------------------------------------------
-void ofxKuPreset::add_float(string name, float *var) {
-	var_.push_back(Var(name, var));
+void ofxKuPreset::add_float(string name, float *var, float defValue) {
+	var_.push_back(Var(name, var, defValue));
 	name_to_map(name, var_.size()-1);
 }
 
@@ -86,16 +86,21 @@ void ofxKuPreset::store(int id) {
 
 //--------------------------------------------------------------
 ofxKuPreset::Var *ofxKuPreset::findVar(const string &name) {
-	map<string, int>::iterator p = var_map_.find( name );
+	auto p = var_map_.find( name );
 	if (p != var_map_.end()) {
 		return &var_[p->second];
 	}
-	return 0;
+	return nullptr;
 }
 
 //--------------------------------------------------------------
 void ofxKuPreset::recall(int id) {		//one-step transition to preset
 	if (id >= 0 && id < preset_.size()) {
+		// Устанавливаем значения по умолчанию
+		for (int i = 0; i < var_.size(); i++) {
+			var_[i].set_default();
+		}
+		// Загружаем остальные
 		vector<string> item = ofSplitString(preset_[id], " ");
 		int n = item.size();
 		if (n % 2 == 0) {
@@ -103,7 +108,7 @@ void ofxKuPreset::recall(int id) {		//one-step transition to preset
 				Var *var = findVar(item[i]);
 				if (var) {
 					var->set_value(ofToDouble(item[i+1]));
-				}
+				}		
 			}
 		}
 		trans_ = false;
