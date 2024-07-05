@@ -1,5 +1,7 @@
 #include "ofxKuFile.h"
 
+using namespace std;
+
 //--------------------------------------------------------------------------------
 bool ofxKuFileExists( string fileName, bool use_data_path)
 {
@@ -96,7 +98,7 @@ string ofxKuFileReadString(string file_name, bool use_data_path) {
 bool ofxKuFileWriteStrings( const vector<string> &list, string fileName, bool use_data_path, bool append) {
 	if (use_data_path) fileName = ofToDataPath(fileName);
 
-	ofstream f(fileName.c_str(),ios::out | ((append)?ios::app : 0));
+	ofstream f(fileName.c_str(),ios::out | ((append)?ios::app : ios::out));
 	for ( int i=0; i<list.size(); i++ ) {
 		f << list[i] << endl;
 	}
