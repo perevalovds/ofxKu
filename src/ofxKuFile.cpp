@@ -99,6 +99,11 @@ bool ofxKuFileWriteStrings( const vector<string> &list, string fileName, bool us
 	if (use_data_path) fileName = ofToDataPath(fileName);
 
 	ofstream f(fileName.c_str(),ios::out | ((append)?ios::app : ios::out));
+    if (!f.is_open()) {
+		ofSystemAlertDialog("Can't open for writing " + fileName);
+		return false;
+	}
+    
 	for ( int i=0; i<list.size(); i++ ) {
 		f << list[i] << endl;
 	}
