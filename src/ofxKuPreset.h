@@ -6,14 +6,18 @@
 
 
 struct ofxKuPreset {
-    ofxKuPreset();
-    void add_int(string name, int *var, int defValue);
-	void add_float(string name, float *var, float defValue);
+    void add_int(const string& name, int* var, int defValue);
+	void add_float(const string& name, float* var, float defValue);
 
-	bool load(string file_name);
-	void save(string file_name);
-	void load();
-	void save();
+	// Note: string values can't contain spaces - ' '
+	void add_string(const string& name, string* var, const string& defValue);
+
+	//bool load(string file_name);
+	bool loadFromStrings(const vector<string>& lines);
+	//void save(string file_name);
+	vector<string> saveToStrings();
+	//void load();
+	//void save();
 
 	void store(int id);
 	void recall(int id);		//one-step transition to preset
@@ -27,19 +31,25 @@ struct ofxKuPreset {
 
 	struct Var {
 		string name;
+		bool is_string() { 
+			return vars != nullptr;
+		}
 		int *vari = nullptr;
 		float *varf = nullptr;
+		string* vars = nullptr;
 
 		int defaulti = 0;
 		float defaultf = 0.;
+		string defaults = "";
 		//for transition
 		double trans0 = 0;
 		double trans1 = 0;	
+		string trans0s = "";
+		string trans1s = "";
 
 		Var(string name0, int *vari0, int defValuei) {
 			name = name0;
 			vari = vari0;
-			varf = 0;
 			trans0 = *vari;
 			trans1 = *vari;
 
@@ -47,29 +57,66 @@ struct ofxKuPreset {
 		}
 		Var(string name0, float *varf0, float defValuef) {
 			name = name0;
-			vari = 0;
 			varf = varf0;
 			trans0 = *varf;
 			trans1 = *varf;
 
 			defaultf = defValuef;
 		}
+		Var(string name0, string* vars0, const string& defValues) {
+			name = name0;
+			vars = vars0;
+			trans0s = *vars;
+			trans1s = *vars;
+
+			defaults = defValues;
+		}
 		double value() {
 			if (varf) return *varf;
 			if (vari) return *vari;
 			return 0;
 		}
-		void set_value(double v) {
-			if (varf) *varf = v;
-			if (vari) *vari = v;
+		string value_str() {
+			if (varf) return ofToString(*varf);
+			if (vari) return ofToString(*vari);
+			if (vars) return *vars;
+			return "?";
+		}
+		void set_value(const string& v) {
+			if (varf) *varf = ofToFloat(v);
+			if (vari) *vari = ofToInt(v);
+			if (vars) *vars = v;
 		}
 		void set_default() {
 			if (varf) *varf = defaultf;
 			if (vari) *vari = defaulti;
+			if (vars) *vars = defaults;
 		}
-		void trans_start(double to) {
-			trans0 = value();
-			trans1 = to;
+		void trans_start_to_default() {
+			if (is_string()) {
+				trans0s = value_str();
+				trans1s = defaults;
+			}
+			else {
+				trans0 = value();
+				if (varf) {
+					trans1 = defaultf;
+				}
+				else if (vari) {
+					trans1 = defaulti;
+				}
+			}
+		}
+			
+		void trans_start(const string& to) {
+			if (is_string()) {
+				trans0s = value_str();
+				trans1s = to;
+			}
+			else {
+				trans0 = value();
+				trans1 = ofToDouble(to);
+			}
 		}
 		void trans(float t) {
 			if (varf) {
@@ -77,7 +124,8 @@ struct ofxKuPreset {
 				//t = t*t*(3-2*t);
 				*varf = ofLerp(trans0, trans1, t);
 			}
-			if (vari) *vari = (t<0.5)?trans0:trans1;
+			if (vari) *vari = (t < 0.5) ? trans0 : trans1;
+			if (vars) *vars = (t < 0.5) ? trans0s : trans1s;
 		}
 
 	};
@@ -92,11 +140,11 @@ private:
 	void name_to_map(string name, int i);
 
 
-	bool trans_;
-	float trans_time_;
+	bool trans_ = false;
+	float trans_time_ = 0.5f;
 
-	float trans_start_;
-	float trans_value_;
+	float trans_start_ = 0;
+	float trans_value_ = 0;
 };
 
 

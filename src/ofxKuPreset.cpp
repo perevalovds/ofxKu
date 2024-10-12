@@ -4,22 +4,21 @@
 #include <map>
 
 //--------------------------------------------------------------
-ofxKuPreset::ofxKuPreset() {
-	trans_ = false;
-	trans_time_ = 0.5;
-	trans_value_ = 0;
-}
-
-//--------------------------------------------------------------
-void ofxKuPreset::add_int(string name, int *var, int defValue) {
+void ofxKuPreset::add_int(const string& name, int* var, int defValue) {
 	var_.push_back(Var(name, var, defValue));
 	name_to_map(name, var_.size()-1);
 }
 
 //--------------------------------------------------------------
-void ofxKuPreset::add_float(string name, float *var, float defValue) {
+void ofxKuPreset::add_float(const string& name, float* var, float defValue) {
 	var_.push_back(Var(name, var, defValue));
 	name_to_map(name, var_.size()-1);
+}
+
+//--------------------------------------------------------------
+void ofxKuPreset::add_string(const string& name, string* var, const string& defValue) {
+	var_.push_back(Var(name, var, defValue));
+	name_to_map(name, var_.size() - 1);
 }
 
 //--------------------------------------------------------------
@@ -28,47 +27,68 @@ void ofxKuPreset::name_to_map(string name, int i) {
 }
 
 //--------------------------------------------------------------
-bool ofxKuPreset::load(string file_name) {	
-	bool result = true;
-	vector<string> file = ofxKuFileReadStrings(file_name);
-	if (file.empty()) {
-		cout << "Error loading presets from " + file_name << endl;
-		result = false;
+bool ofxKuPreset::loadFromStrings(const vector<string>& lines) {
+	if (lines.empty()) {
+		cout << "Error loading presets" << endl;
+		return false;
 	}
-	int n = file.size()/2;
+	int n = lines.size() / 2;
 	preset_.resize(n);
-	for (int i=0; i<n; i++) {
-		preset_[i] = file[i*2+1];
+	for (int i = 0; i < n; i++) {
+		int j = i * 2 + 1;
+		if (j < lines.size()) {
+			preset_[i] = lines[j];
+		}
+		else {
+			ofSystemAlertDialog("ofxKuPreset::loadFromStrings - bad preset lines, not enough last line");
+		}
 	}
-	file_name_ = file_name;
-	return result;
+	return true;
 }
 
 //--------------------------------------------------------------
-void ofxKuPreset::save(string file_name) {
+//bool ofxKuPreset::load(string file_name) {	
+//	file_name_ = file_name;
+//	preset_.clear();
+//
+//	vector<string> file = ofxKuFileReadStrings(file_name);
+//	if (file.empty()) {
+//		cout << "Error loading presets from " + file_name << endl;
+//	}
+//	return loadFromStrings(file);
+//}
+
+//--------------------------------------------------------------
+//void ofxKuPreset::save(string file_name) {
+//	vector<string> file = saveToStrings();
+//	ofxKuFileWriteStrings(file, file_name);
+//	file_name_ = file_name;
+//}
+
+//--------------------------------------------------------------
+vector<string> ofxKuPreset::saveToStrings() {
 	int n = preset_.size();
-	vector<string> file(n*2);
-	for (int i=0; i<n; i++) {
-		file[2*i] = "========   " + ofToString(i,4,'0') + "   =============================";
-		file[2*i+1] = preset_[i];
+	vector<string> file(n * 2);
+	for (int i = 0; i < n; i++) {
+		file[2 * i] = "========   " + ofToString(i, 4, '0') + "   =============================";
+		file[2 * i + 1] = preset_[i];
 	}
-	ofxKuFileWriteStrings(file, file_name);
-	file_name_ = file_name;
+	return file;
 }
 
 //--------------------------------------------------------------
-void ofxKuPreset::load() {
-	if (file_name_ != "") {
-		load(file_name_);
-	}
-}
+//void ofxKuPreset::load() {
+//	if (file_name_ != "") {
+//		load(file_name_);
+//	}
+//}
 
 //--------------------------------------------------------------
-void ofxKuPreset::save() {
-	if (file_name_ != "") {
-		save(file_name_);
-	}
-}
+//void ofxKuPreset::save() {
+//	if (file_name_ != "") {
+//		save(file_name_);
+//	}
+//}
 
 //--------------------------------------------------------------
 void ofxKuPreset::store(int id) {
@@ -78,8 +98,15 @@ void ofxKuPreset::store(int id) {
 	}
 	string pr;
 	for (int i=0; i<var_.size(); i++) {
+		string value = var_[i].value_str();
+		if (ofStringTimesInString(value, " ") > 0) {
+			string message = "Error saving preset - value can't contain space symbol, but " + var_[i].name + "='" + value + "'";
+			cout << message << endl;
+			ofSystemAlertDialog(message);
+		}
+
 		if (i>0) pr += " ";
-		pr += var_[i].name + " " + ofToString(var_[i].value());
+		pr += var_[i].name + " " + value;
 	}
 	preset_[id] = pr;
 }
@@ -107,7 +134,7 @@ void ofxKuPreset::recall(int id) {		//one-step transition to preset
 			for (int i=0; i<n; i+=2) {
 				Var *var = findVar(item[i]);
 				if (var) {
-					var->set_value(ofToDouble(item[i+1]));
+					var->set_value(item[i+1]);
 				}		
 			}
 		}
@@ -120,7 +147,7 @@ void ofxKuPreset::trans_to(int id, float trans_time) { //slow transition between
 	if (id >= 0 && id < preset_.size()) {
 		//default value
 		for (int i=0; i<var_.size(); i++) {
-			var_[i].trans_start(var_[i].value());
+			var_[i].trans_start_to_default();
 		}
 
 		//preset value
@@ -130,7 +157,7 @@ void ofxKuPreset::trans_to(int id, float trans_time) { //slow transition between
 			for (int i=0; i<n; i+=2) {
 				Var *var = findVar(item[i]);
 				if (var) {
-					var->trans_start(ofToDouble(item[i+1]));						
+					var->trans_start(item[i+1]);						
 				}
 			}
 			//enable transition mode
