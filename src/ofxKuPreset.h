@@ -19,6 +19,11 @@ struct ofxKuPreset {
 	//void load();
 	//void save();
 
+	// Export/Import a single preset
+	string export_to_string(int id);
+	void import_from_string(int id, const string& presetLine);
+
+	// Store/Recall a preset
 	void store(int id);
 	void recall(int id);		//one-step transition to preset
 	void trans_to(int id, float trans_time); //slow transition between presets

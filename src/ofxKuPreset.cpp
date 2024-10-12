@@ -91,10 +91,28 @@ vector<string> ofxKuPreset::saveToStrings() {
 //}
 
 //--------------------------------------------------------------
+string ofxKuPreset::export_to_string(int id) {
+	if (id < 0 || id >= preset_.size()) {
+		cout << "Error ofxKuPreset::export_to_string - bad preset id " << id << endl;
+		return "";
+	}
+	return preset_[id];
+}
+
+//--------------------------------------------------------------
+void ofxKuPreset::import_from_string(int id, const string& presetLine) {
+	if (id < 0) return;
+	if (id >= preset_.size()) {
+		preset_.resize(id + 1);
+	}
+	preset_[id] = presetLine;
+}
+
+//--------------------------------------------------------------
 void ofxKuPreset::store(int id) {
 	if (id < 0) return;
 	if (id >= preset_.size()) {
-		preset_.resize(id+1);
+		preset_.resize(id + 1);
 	}
 	string pr;
 	for (int i=0; i<var_.size(); i++) {
