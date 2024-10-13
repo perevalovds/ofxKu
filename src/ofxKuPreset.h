@@ -25,7 +25,9 @@ struct ofxKuPreset {
 
 	// Store/Recall a preset
 	void store(int id);
-	void recall(int id);		//one-step transition to preset
+	// one-step transition to preset
+	// returns false is not all variables were loaded, and not unknown variables were found
+	bool recall(int id, bool load_missed_as_defaults = true, bool only_check_errors = false);
 	void trans_to(int id, float trans_time); //slow transition between presets
 	void stop_transition();
 	void update();

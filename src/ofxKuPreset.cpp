@@ -139,11 +139,21 @@ ofxKuPreset::Var *ofxKuPreset::findVar(const string &name) {
 }
 
 //--------------------------------------------------------------
-void ofxKuPreset::recall(int id) {		//one-step transition to preset
+bool ofxKuPreset::recall(int id, bool load_missed_as_defaults, bool only_check_errors) {
 	if (id >= 0 && id < preset_.size()) {
-		// ”станавливаем значени€ по умолчанию
-		for (int i = 0; i < var_.size(); i++) {
-			var_[i].set_default();
+		unordered_map<string, bool> loaded_map;
+		bool result = true;
+
+		// ≈сли требуетс€, устанавливаем значени€ по умолчанию
+		if (!only_check_errors) {
+			if (load_missed_as_defaults) {
+				for (int i = 0; i < var_.size(); i++) {
+					var_[i].set_default();
+				}
+			}
+			else {
+				cout << "Preset " << id << " is loading without setting default to the missed values" << endl;
+			}
 		}
 		// «агружаем остальные
 		vector<string> item = ofSplitString(preset_[id], " ");
@@ -152,11 +162,40 @@ void ofxKuPreset::recall(int id) {		//one-step transition to preset
 			for (int i=0; i<n; i+=2) {
 				Var *var = findVar(item[i]);
 				if (var) {
-					var->set_value(item[i+1]);
-				}		
+					if (loaded_map.find(var->name) == loaded_map.end()) {
+						if (!only_check_errors) {
+							var->set_value(item[i + 1]);
+						}
+						loaded_map[var->name] = true;
+					}
+					else {
+						cout << "Preset has duplicated value " << var->name << endl;
+						result = false;
+					}
+				}
+				else {
+					cout << "Preset has unknown value " << item[i] << endl;
+					result = false;						
+				}
 			}
 		}
+		if (loaded_map.size() < var_.size()) {
+			result = false;
+			cout << "Preset has missed values:" << endl;
+			for (auto& var : var_) {
+				if (loaded_map.find(var.name) == loaded_map.end()) {
+					cout << "    " << var.name << endl;
+				}
+			}
+		}
+
 		trans_ = false;
+
+		return result;
+	}
+	else {
+		cout << "Requested preset with id out of range: " << id << endl;
+		return false;
 	}
 }
 
